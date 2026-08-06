@@ -1,0 +1,138 @@
+/**
+ * Centralized image and SVG paths for the entire project.
+ * Use these constants instead of hardcoded strings to ensure consistency
+ * and make path changes easier.
+ */
+
+import appLogo from '@/assets/images/app-logo.png';
+import rupyaaLogo from '@/assets/images/rupyaa-logo.svg';
+import customer_care from '@/assets/images/customer-care.png';
+import illustration1 from '@/assets/images/illustration-one.webp';
+import illustration2 from '@/assets/images/illustration-two.webp';
+import illustration3 from '@/assets/images/illustration-three.webp';
+import exclusiveOffer from '@/assets/images/offer-money.png';
+import loanEligibility from '@/assets/images/loan-eligibility.png';
+import trustBanner from '@/assets/images/trust-banner.png';
+import checkEligibility from '@/assets/images/check-eligibility.png';
+import homeCreditScore from '@/assets/images/home-credit-score.svg';
+import bikeLoan from '@/assets/images/bike-loan.png';
+import carLoan from '@/assets/images/car-loan.png';
+import instantPersonalLoan from '@/assets/images/instant-personal-loan.png';
+import homeLoan from '@/assets/images/home-loan.png';
+import laptopLoan from '@/assets/images/laptop-loan.png';
+import mobileLoan from '@/assets/images/mobile-loan.png';
+import personalLoan from '@/assets/images/personal-loan.png';
+import travelLoan from '@/assets/images/travel-loan.png';
+import increasedCoins from '@/assets/images/increasing-coin.png';
+import congratulationSuccess from '@/assets/images/congratulation-success.png';
+import offerAcceptance from '@/assets/images/offer-acceptance.png';
+import offerRejection from '@/assets/images/offer-rejection.png';
+import loanAgreement from '@/assets/images/loan-agreement.png';
+import failedEsign from '@/assets/images/failed-esign.png';
+import digilocker from '@/assets/images/digilocker.png';
+import tools from '@/assets/images/tools.png';
+import whatsappIcon from '@/assets/images/whatsapp-icon.png';
+import lock from '@/assets/images/lock.jpeg';
+import underReview from '@/assets/images/under-review.png';
+import offerVerified from '@/assets/images/offer-verified.png';
+import noOfferAvailable from '@/assets/images/no-offer-available.png';
+import applicationRejected from '@/assets/images/application-rejected.png';
+import zapcashLoading from '@/assets/videos/zapcash-loading.gif';
+import icon from '@/assets/images/icon.png';
+import enachSuccess from '@/assets/images/enach-success.png'; 
+import esignSuccess from '@/assets/images/esign-success.png';
+import esignVerification from '@/assets/images/esign-verification.svg';
+import activeLoan from '@/assets/images/active-loan.png';
+import faceKycSuccess from '@/assets/images/face-kyc-success.png';
+import faceKycIntro from '@/assets/images/face-kyc-intro.svg';
+import zIcon from '@/assets/images/z-icon.png';
+import digilockerSuccess from '@/assets/images/digilocker-success.png'; 
+import retry from '@/assets/images/retry.png';
+import loanSanctioned from '@/assets/images/loan-sanctioned.png';
+import finalDisbursementReview from '@/assets/images/final-disbursement-review.svg';
+import rupee from '@/assets/images/rupee.png';
+import thunder from '@/assets/images/thunder.png';
+import noDocuments from '@/assets/images/no-document.png';
+import paymentSuccess from '@/assets/images/payment-success.png';
+import noLoan from '@/assets/images/no-loan.png';
+import gridImage from '@/assets/images/grid-image.png';
+import tiger from '@/assets/images/tiger.png';
+import letstalk from '@/assets/images/letstalk.png';
+import bigLogo from '@/assets/images/big-logo.png';
+import refresh from '@/assets/images/refresh.png';
+import nonSalaryAccount from '@/assets/images/non-salary-account.svg';
+import winStar from '@/assets/images/win-star.png';
+import supportAgent from '@/assets/images/support-agent.png';
+import assuranceCheckbox from '@/assets/images/assurance-checkbox.svg';
+
+// const BUCKET_IMAGE_URL = 'https://wecredit-main-website-assets.s3.ap-south-1.amazonaws.com';
+
+export const IMAGES = {
+  APP_LOGO: appLogo,
+  SUPPORT_AGENT: supportAgent,
+  ASSURANCE_CHECKBOX: assuranceCheckbox,
+  RUPYAA_LOGO: rupyaaLogo,
+  CUSTOMER_CARE: customer_care,
+  ILLUSTRATION_ONE: illustration1,
+  ILLUSTRATION_TWO: illustration2,
+  ILLUSTRATION_THREE: illustration3,
+  EXCLUSIVE_OFFER: exclusiveOffer,
+  LOAN_ELIGIBILITY: loanEligibility,
+  TRUST_BANNER: trustBanner,
+  CHECK_ELIGIBILITY: checkEligibility,
+  HOME_CREDIT_SCORE: homeCreditScore,
+  BIKE_LOAN: bikeLoan,
+  CAR_LOAN: carLoan,
+  INSTANT_PERSONAL_LOAN: instantPersonalLoan,
+  HOME_LOAN: homeLoan,
+  LAPTOP_LOAN: laptopLoan,
+  MOBILE_LOAN: mobileLoan,
+  PERSONAL_LOAN: personalLoan,
+  TRAVEL_LOAN: travelLoan,
+  INCREASED_COINS: increasedCoins,
+  CONGRATULATION_SUCCESS: congratulationSuccess,
+  OFFER_ACCEPTANCE: offerAcceptance,
+  OFFER_REJECTION: offerRejection,
+  LOAN_AGREEMENT: loanAgreement,
+  FAILED_ESIGN: failedEsign,
+  DIGILOCKER: digilocker,
+  TOOLS: tools,
+  WHATSAPP_ICON: whatsappIcon,
+  LOCK: lock,
+  ENACH_SUCCESS: enachSuccess,
+  ESIGN_SUCCESS: esignSuccess,
+  ESIGN_VERIFICATION: esignVerification,
+  Z_ICON: zIcon,
+  /** Offer status step illustrations (placeholders; swap assets when ready). */
+  OFFER_STATUS_VERIFIED: offerVerified,
+  OFFER_STATUS_PENDING: offerAcceptance,
+  OFFER_STATUS_REJECTED: offerRejection,
+  UNDER_REVIEW: underReview,
+  NO_OFFER_AVAILABLE: noOfferAvailable,
+  NO_OFFER_AVAILABLE_ILLUSTRATION: noOfferAvailable,
+  APPLICATION_REJECTED: applicationRejected,
+  ICON: icon,
+  ACTIVE_LOAN: activeLoan,
+  FACE_KYC_SUCCESS: faceKycSuccess,
+  FACE_KYC_INTRO: faceKycIntro,
+  DIGILOCKER_SUCCESS: digilockerSuccess,
+  RETRY: retry,
+  LOAN_SANCTIONED: loanSanctioned,
+  FINAL_DISBURSEMENT_REVIEW: finalDisbursementReview,
+  RUPEE: rupee,
+  THUNDER: thunder,
+  NO_DOCUMENT: noDocuments,
+  PAYMENT_SUCCESS: paymentSuccess,
+  NO_LOAN: noLoan,
+  GRID_IMAGE: gridImage,
+  TIGER: tiger,
+  LETSTALK: letstalk,
+  BIG_LOGO: bigLogo,
+  REFRESH: refresh,
+  NON_SALARY_ACCOUNT: nonSalaryAccount,
+  WIN_STAR: winStar,
+} as const;
+
+export const GIF_VIDEOS = {
+  ZAPCASH_LOADING: zapcashLoading,
+} as const;

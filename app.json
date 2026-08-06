@@ -1,0 +1,126 @@
+{
+  "expo": {
+    "name": "ZapCash",
+    "slug": "zapcash-mobile-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "zapcash",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zapcash.loan",
+      "associatedDomains": [
+        "applinks:zapcash.in",
+        "applinks:www.zapcash.in",
+        "applinks:zapcash.go.link"
+      ],
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "remote-notification"
+        ],
+        "FirebaseInAppMessagingDisplayEnabled": true,
+        "NSCameraUsageDescription": "ZapCash needs camera access to capture your selfie and scan documents for identity verification.",
+        "NSLocationWhenInUseUsageDescription": "ZapCash uses your location to verify serviceability and confirm your address during the KYC process.",
+        "NSContactsUsageDescription": "ZapCash needs access to your device contacts so you can invite friends.",
+        "NSPhotoLibraryUsageDescription": "ZapCash needs access to your photo library so you can upload documents for your loan application.",
+        "NSUserTrackingUsageDescription": "We use this identifier to show you personalised offers and to measure the effectiveness of our ads.",
+        "SKAdNetworkItems": [
+          {
+            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
+          }
+        ],
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.520032386050-ksc98gssjndoifj6vmu70j5fcijiv7n1"
+            ]
+          }
+        ]
+      },
+      "googleServicesFile": "./GoogleService-Info.plist"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-web-browser",
+      "expo-localization",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "imageWidth": 220
+        }
+      ],
+      [
+        "freerasp-react-native/app.plugin.js",
+        {
+          "android": {
+            "minSdkVersion": "24"
+          }
+        }
+      ],
+      [
+        "./plugins/withGoogleTagManager.js",
+        {
+          "androidContainerId": "GTM-NQTM5TJ9",
+          "iosContainerId": "GTM-NQTM5TJ9",
+          "tagManagerVersion": "18.0.1",
+          "androidContainerFile": "./assets/gtm-containers/GTM-NQTM5TJ9.json",
+          "iosContainerFile": "./assets/gtm-containers/GTM-NQTM5TJ9.json"
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "ZapCash needs access to your device contacts so you can invite friends."
+        }
+      ],
+      "expo-tracking-transparency"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "otaUpdateNumberDev": "46",
+      "otaUpdateNumberProd": "58",
+      "versionDev": "1.0.38",
+      "versionProd": "1.0.50",
+      "versionProdIos": "1.2.16",
+      "isDevelopment": false,
+      "otaUpdateNumber": "1",
+      "environment": "production",
+      "disableCrashlytics": false,
+      "router": {},
+      "eas": {
+        "projectId": "d9dbf64c-d5cf-4afd-9182-b91fe0b87d51"
+      }
+    },
+    "android": {
+      "package": "com.zapcash.loan",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "owner": "omnistack-innovation",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d9dbf64c-d5cf-4afd-9182-b91fe0b87d51"
+    }
+  }
+}

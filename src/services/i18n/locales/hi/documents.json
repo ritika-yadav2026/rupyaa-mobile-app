@@ -1,0 +1,22 @@
+{
+  "Could not add file": "फ़ाइल नहीं जोड़ी जा सकी",
+  "Please try again or pick a supported format.": "कृपया फिर से कोशिश करें या समर्थित फ़ॉर्मेट चुनें।",
+  "Loan agreement will be downloaded": "लोन एग्रीमेंट डाउनलोड किया जाएगा",
+  "Requested {{date}}": "{{date}} को अनुरोध किया गया",
+  "This request is {{status}}.": "यह अनुरोध {{status}} है।",
+  "Documents Approved": "दस्तावेज़ स्वीकृत",
+  "Your documents have been approved successfully.": "आपके दस्तावेज़ सफलतापूर्वक स्वीकृत हो गए हैं।",
+  "or drag and drop files here": "या फ़ाइलें यहां खींचें और छोड़ें",
+  "Supported formats: PDF, JPG, PNG. Max 10MB per file.": "समर्थित फॉर्मेट: PDF, JPG, PNG। प्रति फ़ाइल अधिकतम 10MB।",
+  "Selected": "चयनित",
+  "Document Requests": "दस्तावेज़ अनुरोध",
+  "Upload requested documents for your loan application": "अपने लोन एप्लीकेशन के लिए अनुरोधित दस्तावेज़ अपलोड करें",
+  "No pending documents. We'll notify you if anything is required.": "कोई लंबित दस्तावेज़ नहीं है। कुछ आवश्यक होने पर हम आपको सूचित करेंगे।",
+  "Access your signed loan agreement": "अपना हस्ताक्षरित लोन एग्रीमेंट देखें",
+  "Review all approved loan terms and conditions in one place.": "सभी स्वीकृत लोन नियम और शर्तें एक ही जगह देखें।",
+  "Loan Agreement": "लोन एग्रीमेंट",
+  "Approved": "स्वीकृत",
+  "Loan Agreement.pdf": "Loan Agreement.pdf",
+  "PDF - 1.2 MB": "PDF - 1.2 MB",
+  "No active loans found.": "कोई सक्रिय लोन नहीं मिला।"
+}
