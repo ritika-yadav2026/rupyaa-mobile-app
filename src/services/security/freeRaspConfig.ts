@@ -37,12 +37,12 @@ if (!freeRaspConfigValid) {
 
 export const freeRaspConfig: TalsecConfig = {
   androidConfig: {
-    packageName: 'com.zapcash.loan',
+    packageName: 'com.rupyaa.loan',
     certificateHashes: androidCertificateHashes,
     supportedAlternativeStores: ['com.sec.android.app.samsungapps'],
   },
   iosConfig: {
-    appBundleId: 'com.zapcash.loan',
+    appBundleId: 'com.rupyaa.loan',
     appTeamId: freeRaspStaticConfig.iosAppTeamId,
   },
   watcherMail: freeRaspStaticConfig.watcherMail,

@@ -42,11 +42,6 @@ export default ({ config }) => {
           ...(config.ios?.entitlements ?? {}),
           'aps-environment': isProduction ? 'production' : 'development',
         },
-        associatedDomains: [
-          'applinks:zapcash.in',
-          'applinks:www.zapcash.in',
-          'applinks:zapcash.go.link',
-        ],
       },
       android: {
         ...config.android,
@@ -63,21 +58,11 @@ export default ({ config }) => {
           ])
         ),
         // Custom scheme is required when intentFilters is set — it overrides Expo's default
-        // scheme filter from app.json `scheme: "zapcash"`. For local dev, test with zapcash:// URLs.
+        // scheme filter from app.json `scheme: "rupyaa"`.
         intentFilters: [
           {
             action: 'VIEW',
-            autoVerify: true,
-            data: [
-              { scheme: 'https', host: 'www.zapcash.in', pathPrefix: '/' },
-              { scheme: 'https', host: 'zapcash.in', pathPrefix: '/' },
-              { scheme: 'https', host: 'zapcash.go.link', pathPrefix: '/' },
-            ],
-            category: ['BROWSABLE', 'DEFAULT'],
-          },
-          {
-            action: 'VIEW',
-            data: [{ scheme: 'zapcash' }],
+            data: [{ scheme: 'rupyaa' }],
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ],
@@ -124,7 +109,7 @@ export default ({ config }) => {
           {
             appID: "1554116568996226",
             clientToken: "0d4eaa217f70d04edd4792cdb7873055",
-            displayName: "ZapCash",
+            displayName: "Rupyaa",
             scheme: "fb1554116568996226",
             advertiserIDCollectionEnabled: false,
             autoLogAppEventsEnabled: true,

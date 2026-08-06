@@ -1,30 +1,25 @@
 {
   "expo": {
-    "name": "ZapCash",
-    "slug": "zapcash-mobile-app",
+    "name": "Rupyaa",
+    "slug": "rupyaa-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "zapcash",
+    "scheme": "rupyaa",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.zapcash.loan",
-      "associatedDomains": [
-        "applinks:zapcash.in",
-        "applinks:www.zapcash.in",
-        "applinks:zapcash.go.link"
-      ],
+      "bundleIdentifier": "com.rupyaa.loan",
       "infoPlist": {
         "UIBackgroundModes": [
           "remote-notification"
         ],
         "FirebaseInAppMessagingDisplayEnabled": true,
-        "NSCameraUsageDescription": "ZapCash needs camera access to capture your selfie and scan documents for identity verification.",
-        "NSLocationWhenInUseUsageDescription": "ZapCash uses your location to verify serviceability and confirm your address during the KYC process.",
-        "NSContactsUsageDescription": "ZapCash needs access to your device contacts so you can invite friends.",
-        "NSPhotoLibraryUsageDescription": "ZapCash needs access to your photo library so you can upload documents for your loan application.",
+        "NSCameraUsageDescription": "Rupyaa needs camera access to capture your selfie and scan documents for identity verification.",
+        "NSLocationWhenInUseUsageDescription": "Rupyaa uses your location to verify serviceability and confirm your address during the KYC process.",
+        "NSContactsUsageDescription": "Rupyaa needs access to your device contacts so you can invite friends.",
+        "NSPhotoLibraryUsageDescription": "Rupyaa needs access to your photo library so you can upload documents for your loan application.",
         "NSUserTrackingUsageDescription": "We use this identifier to show you personalised offers and to measure the effectiveness of our ads.",
         "SKAdNetworkItems": [
           {
@@ -85,7 +80,7 @@
       [
         "expo-contacts",
         {
-          "contactsPermission": "ZapCash needs access to your device contacts so you can invite friends."
+          "contactsPermission": "Rupyaa needs access to your device contacts so you can invite friends."
         }
       ],
       "expo-tracking-transparency"
@@ -94,22 +89,23 @@
       "typedRoutes": true
     },
     "extra": {
-      "otaUpdateNumberDev": "46",
-      "otaUpdateNumberProd": "58",
-      "versionDev": "1.0.38",
-      "versionProd": "1.0.50",
-      "versionProdIos": "1.2.16",
-      "isDevelopment": false,
+      "otaUpdateNumberDev": "1",
+      "otaUpdateNumberProd": "1",
+      "versionDev": "1.0.0",
+      "versionProd": "1.0.0",
+      "versionProdIos": "1.0.0",
+      "isDevelopment": true,
       "otaUpdateNumber": "1",
       "environment": "production",
       "disableCrashlytics": false,
       "router": {},
+      "version": "1.0.38",
       "eas": {
-        "projectId": "d9dbf64c-d5cf-4afd-9182-b91fe0b87d51"
+        "projectId": "47dfc90e-0f7d-40af-a562-951aca9e89d8"
       }
     },
     "android": {
-      "package": "com.zapcash.loan",
+      "package": "com.rupyaa.loan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -118,9 +114,6 @@
     "owner": "omnistack-innovation",
     "runtimeVersion": {
       "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/d9dbf64c-d5cf-4afd-9182-b91fe0b87d51"
     }
   }
 }
