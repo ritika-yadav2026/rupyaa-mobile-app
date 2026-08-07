@@ -49,7 +49,7 @@ export const colors = {
     light: '#E5E7EB',
     main: '#D1D5DB',
     dark: '#9CA3AF',
-    detailsAccent: '#FFD14133',
+    detailsAccent: '#FECA4233',
   },
   success: {
     main: '#10B981',
@@ -64,7 +64,6 @@ export const colors = {
     dark: '#D97706',
     bg: '#FEF3C7',
     "bg-2": '#FFFBEB',
-    personalDetailsAccent: '#FECA42',
   },
   error: {
     main: '#EF4444',

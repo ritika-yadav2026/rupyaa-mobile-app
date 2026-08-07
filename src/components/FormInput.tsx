@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   accessoryDivider: {
     width: 1,
     alignSelf: 'stretch',
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.primary.main,
     marginLeft: spacing.sm,
     marginRight: spacing.xs,
   },

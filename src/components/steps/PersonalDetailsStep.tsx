@@ -238,7 +238,7 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
             <ConsentNotice
               hideLockIcon={true}
               text="Your details are safe and encrypted"
-              icon={<ShieldCheck size={18} color={colors.warning.personalDetailsAccent} />}
+              icon={<ShieldCheck size={18} color={colors.primary.main} />}
             />
             <Button
               variant="primary"
@@ -302,7 +302,7 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
               options={GENDER_OPTIONS}
               label="Gender"
               variant="row"
-              accentColor={colors.warning.personalDetailsAccent}
+              accentColor={colors.primary.main}
             />
           </View>
           <ControlledInput
@@ -328,7 +328,7 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
         editLabel="Edit details"
         confirmLabel="Confirm"
         confirmLoading={isPending}
-        accentColor={colors.warning.personalDetailsAccent}
+        accentColor={colors.primary.main}
       />
 
       {/* Shown on top of loan-journey when the user is found ineligible */}
@@ -365,6 +365,6 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     marginBottom: 0,
-    backgroundColor: colors.warning.personalDetailsAccent,
+    backgroundColor: colors.primary.main,
   },
 });

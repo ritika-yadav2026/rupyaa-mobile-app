@@ -56,11 +56,8 @@ export interface Notification {
 export interface OnboardingSlide {
   id: string;
   title: string;
-  /** Substring of title to render in primary green color */
-  titleHighlight?: string;
-  subtitle: string;
   description?: string;
-  image?: any;
+  image?: string;
 }
 
 export type {

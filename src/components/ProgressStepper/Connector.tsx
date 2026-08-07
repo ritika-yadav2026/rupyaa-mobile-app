@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   connector: {
     flex: 1,
     height: CONNECTOR_HEIGHT,
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.primary.main,
     overflow: 'hidden',
   },
   connectorHidden: {

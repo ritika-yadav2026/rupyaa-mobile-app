@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 0,
     borderBottomWidth: 1.5,
-    borderBottomColor: colors.warning.light,
+    borderBottomColor: colors.primary.main,
     borderRadius: radius.none,
     paddingHorizontal: 0,
   },
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   countryCodeContainer: {
     paddingRight: spacing.sm,
     borderRightWidth: 1,
-    borderRightColor: colors.border.light,
+    borderRightColor: colors.primary.main,
     marginRight: spacing.md,
   },
   countryCode: {

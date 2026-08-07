@@ -4,8 +4,8 @@ import { STRING_DATA } from "../constants/data";
 import { envConfig } from "./envConfig";
 
 export const appConfig = {
-  // Keep the onboarding flow available but skip it until it is needed again.
-  enableOnboarding: false,
+  // Show the marketing onboarding carousel after language selection.
+  enableOnboarding: true,
   // Set to true to skip fetching user stage on each loan-journey step (testing only)
   bypassUserStageCheck: true,
   // Toggle to test ProgressStepperV2 (react-native-step-indicator) vs V1

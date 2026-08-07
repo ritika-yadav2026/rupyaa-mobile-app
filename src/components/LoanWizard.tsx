@@ -256,7 +256,7 @@ export function LoanWizard() {
           {appConfig.useProgressStepperV2 ? (
             <ProgressStepperV2
               {...stepperProps}
-              accentColor={phaseIndex === 0 && substepIndex === 0 ? colors.warning.personalDetailsAccent : undefined}
+              accentColor={colors.primary.main}
             />
           ) : (
             <ProgressStepper {...stepperProps} />
