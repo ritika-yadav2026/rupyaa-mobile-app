@@ -37,7 +37,7 @@ export default ({ config }) => {
       // builds stay aligned.
       ios: {
         ...config.ios,
-        googleServicesFile: './GoogleService-Info.plist',
+       
         entitlements: {
           ...(config.ios?.entitlements ?? {}),
           'aps-environment': isProduction ? 'production' : 'development',
@@ -45,7 +45,6 @@ export default ({ config }) => {
       },
       android: {
         ...config.android,
-        googleServicesFile: './google-services.json',
         permissions: [
           ...(config.android?.permissions || []),
         ],

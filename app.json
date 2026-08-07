@@ -11,6 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.rupyaa.loan",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "UIBackgroundModes": [
           "remote-notification"
@@ -38,7 +39,9 @@
           }
         ]
       },
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "entitlements": {
+        "aps-environment": "development"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -65,16 +68,6 @@
           "android": {
             "minSdkVersion": "24"
           }
-        }
-      ],
-      [
-        "./plugins/withGoogleTagManager.js",
-        {
-          "androidContainerId": "GTM-NQTM5TJ9",
-          "iosContainerId": "GTM-NQTM5TJ9",
-          "tagManagerVersion": "18.0.1",
-          "androidContainerFile": "./assets/gtm-containers/GTM-NQTM5TJ9.json",
-          "iosContainerFile": "./assets/gtm-containers/GTM-NQTM5TJ9.json"
         }
       ],
       [
@@ -106,14 +99,50 @@
     },
     "android": {
       "package": "com.rupyaa.loan",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      
+      "permissions": [
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS",
+        "com.google.android.gms.permission.AD_ID",
+        "android.permission.INTERNET"
+      ],
+      "blockedPermissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.DETECT_SCREEN_CAPTURE",
+        "android.permission.DETECT_SCREEN_RECORDING",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "com.google.android.providers.gsf.permission.READ_GSERVICES"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "rupyaa"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "owner": "omnistack-innovation",
     "runtimeVersion": {
       "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/47dfc90e-0f7d-40af-a562-951aca9e89d8"
     }
   }
 }
