@@ -108,10 +108,13 @@ export function VerifyOtpModal({
                 <X size={24} color={colors.text.primary} strokeWidth={2} />
               </TouchableOpacity>
             </View>
-            <AppText style={styles.title} variant="h3" weight="bold">
+            <AppText style={styles.title} variant="h3" weight="semiBold">
               Verify OTP
             </AppText>
-            <AppText style={styles.sentTo} variant="body">
+            <AppText style={styles.sentToLabel} variant="caption" weight="semiBold">
+              Enter the OTP sent to
+            </AppText>
+            <AppText style={styles.sentTo} variant="caption">
               {sentTo}
             </AppText>
 
@@ -124,6 +127,7 @@ export function VerifyOtpModal({
                 disabled={disabled}
                 hasError={!!error}
                 autoFocus={false}
+                cellStyle={styles.otpCell}
               />
             </View>
             <View style={styles.timerWrap}>
@@ -132,6 +136,8 @@ export function VerifyOtpModal({
                 onResend={onResend}
                 textBefore="Didn't receive the OTP?"
                 linkText="Resend"
+                accentColor={colors.primary.main}
+                secondsOnlyFormat
               />
             </View>
             {error && <View style={{ width: '100%' }}>
@@ -202,10 +208,21 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.text.primary,
+    fontSize: 24,
+    lineHeight: 36,
+    marginBottom: spacing.md,
+  },
+  sentToLabel: {
+    color: colors.text.primary,
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: 'center',
     marginBottom: spacing.xs,
   },
   sentTo: {
     color: colors.text.secondary,
+    fontSize: 14,
+    lineHeight: 21,
     marginBottom: spacing.lg,
     textAlign: 'center',
   },
@@ -218,6 +235,11 @@ const styles = StyleSheet.create({
     marginBottom: spacing.base,
     alignItems: 'center',
     width: '100%',
+  },
+  otpCell: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
   },
   timerWrap: {
     marginBottom: spacing.lg,

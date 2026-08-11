@@ -3,7 +3,7 @@ import { StyleSheet, type StyleProp, type TextStyle } from 'react-native';
 import { AppText } from '../AppText';
 import { typography } from '@/src/theme';
 
-const HINT_PREFIX = 'Please use your salary account ';
+const HINT_PREFIX = 'Please use your salary account';
 const HINT_SUFFIX = ' for faster processing.';
 
 export interface SalaryAccountHintTextProps {
@@ -20,13 +20,13 @@ export function SalaryAccountHintText({
       style={[styles.helperText, style]}
       variant="caption"
       color="textprimary"
-      weight="semiBold"
+      weight="regular"
     >
       {HINT_PREFIX}
       {salaryAccountSuffixes.map((suffix, index) => (
         <React.Fragment key={`${suffix}-${index}`}>
           {index > 0 ? ', ' : null}
-          <AppText variant="captionExtraSmall" color="primary" weight="semiBold">
+          <AppText variant="captionSmall" color="primary" weight="regular">
             {` ending with "${suffix}"`}
           </AppText>
         </React.Fragment>
@@ -38,6 +38,7 @@ export function SalaryAccountHintText({
 
 const styles = StyleSheet.create({
   helperText: {
-    fontSize: typography.fontSize.xxs,
+    fontSize: typography.fontSize.xs,
+    lineHeight: typography.fontSize.xs * typography.lineHeight.normal,
   },
 });

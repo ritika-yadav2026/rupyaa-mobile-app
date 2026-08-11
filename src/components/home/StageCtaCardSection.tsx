@@ -17,19 +17,11 @@ import { getLoanStatusCardStageConfig } from '@/src/config/loanStatusCardConfig'
 import { UserStagesInBackend } from '@/src/config/userStages';
 import { USER_STAGE_GROUPS } from '@/src/config/userStages';
 import { isCblOrRejectedStage } from '@/src/config/userStages';
-import type { FlowPhase } from '@/src/config/flowSteps';
+import { getMainStepLabels, type FlowPhase } from '@/src/config/flowSteps';
 import type { FlowJourneySummary } from '@/src/utils/flowProgress';
 import { isLoanStatusPending } from '@/src/utils/loan-helpers';
 import { IMAGES } from '@/src/constants/images';
 import { ApplicationNotApprovedCard } from './ApplicationNotApprovedCard';
-
-// Steps for ProgressStepperV2 (same 4 phases as LoanStatusCard)
-const JOURNEY_STEPS = [
-  { id: 'register', label: 'Details' },
-  { id: 'offer', label: 'Offer' },
-  { id: 'kyc', label: 'Verify' },
-  { id: 'disbursal', label: 'Get Funds' },
-] as const;
 
 /** Pre-offer = register phase only (stages before OFFERINGS). */
 const PRE_OFFER_STAGES: readonly UserStagesInBackend[] = USER_STAGE_GROUPS.register;
@@ -155,7 +147,7 @@ export function StageCtaCardSection({
       {showStepper && (
         <View style={styles.stepperWrap}>
           <ProgressStepperV2
-            steps={JOURNEY_STEPS}
+            steps={getMainStepLabels()}
             currentStep={currentStep}
             progress={progressInStep}
             passedPhases={passedPhases}

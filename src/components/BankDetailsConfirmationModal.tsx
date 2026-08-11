@@ -119,6 +119,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.text.primary,
+    fontSize: 20,
+    lineHeight: 30,
     marginBottom: spacing.xl,
   },
   details: {
@@ -133,6 +135,8 @@ const styles = StyleSheet.create({
   detailLabel: {
     flex: 1,
     color: colors.text.gray,
+    fontSize: 14,
+    lineHeight: 21,
   },
   detailValue: {
     flex: 1,
@@ -145,5 +149,6 @@ const styles = StyleSheet.create({
   action: {
     flex: 1,
     paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
   },
 });

@@ -8,7 +8,6 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Ionicons } from '@expo/vector-icons';
 import { AppText } from '../AppText';
 import { ControlledInput } from '../ControlledInput';
 import { Button } from '../Button';
@@ -29,7 +28,6 @@ import { useIneligibilityModal } from '@/hooks/useIneligibilityModal';
 import { appConfig } from '@/src/config/appConfig';
 import { UserStagesInBackend, type UserStage } from '@/src/config/userStages';
 import { PhonePrefix } from '../PhonePrefix';
-import { ConsentNotice } from '../ConsentNotice';
 import { ANALYTICS_EVENT, logAnalyticsEvent } from '@/src/services/analytics';
 
 type ReferenceDetailsFormData = z.input<typeof referenceDetailsSchema>;
@@ -160,7 +158,7 @@ export function ReferenceDetailsStep({ onNext, onPrev }: StepProps) {
               loading={isPending}
               onPress={handleSubmit(onSubmit, onValidationError)}
             >
-              Next →
+              Next
             </Button>
           </>
         }
@@ -174,10 +172,7 @@ export function ReferenceDetailsStep({ onNext, onPrev }: StepProps) {
 
         <View style={styles.referenceCard}>
           <View style={styles.referenceHeader}>
-            <View style={styles.referenceIconBg}>
-              <Ionicons name="person-outline" size={18} color={colors.primary.main} />
-            </View>
-            <AppText style={styles.referenceLabel} variant="body" weight="semiBold">
+            <AppText style={styles.referenceLabel} variant="caption" weight="semiBold">
               Reference 1
             </AppText>
           </View>
@@ -211,10 +206,7 @@ export function ReferenceDetailsStep({ onNext, onPrev }: StepProps) {
 
         <View style={styles.referenceCard}>
           <View style={styles.referenceHeader}>
-            <View style={styles.referenceIconBg}>
-              <Ionicons name="person-outline" size={18} color={colors.primary.main} />
-            </View>
-            <AppText style={styles.referenceLabel} variant="body" weight="semiBold">
+            <AppText style={styles.referenceLabel} variant="caption" weight="semiBold">
               Reference 2
             </AppText>
           </View>
@@ -245,12 +237,6 @@ export function ReferenceDetailsStep({ onNext, onPrev }: StepProps) {
           </View>
         </View>
 
-        <View style={styles.noteContainer}>
-          <Ionicons name="information-circle-outline" size={18} color={colors.text.tertiary} />
-          <AppText style={styles.noteText} variant="caption">
-          They will only be contacted if required. All information is confidential and securely stored
-          </AppText>
-        </View>
       </FormLayout>
 
     </>
@@ -268,42 +254,22 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   referenceCard: {
-    backgroundColor: colors.background.secondary,
-    borderRadius: radius.lg,
+    backgroundColor: colors.background.primary,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border.light,
     padding: spacing.base,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.base,
   },
   referenceHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  referenceIconBg: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.primary.lightest,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: spacing.sm,
+    marginBottom: spacing.sm,
   },
   referenceLabel: {
     color: colors.text.primary,
   },
   referenceFields: {
     gap: 0,
-  },
-  noteContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: spacing.sm,
-    paddingVertical: spacing.base,
-  },
-  noteText: {
-    color: colors.text.tertiary,
-    flex: 1,
-    lineHeight: 18,
   },
 });

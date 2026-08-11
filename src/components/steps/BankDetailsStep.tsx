@@ -350,6 +350,7 @@ export function BankDetailsStep({ onNext, onPrev }: StepProps) {
               control={control}
               name="accountNumber"
               label="Bank Account Number"
+              labelWeight="semiBold"
               placeholder="Your bank account number"
               keyboardType="number-pad"
               maxLength={18}
@@ -365,7 +366,8 @@ export function BankDetailsStep({ onNext, onPrev }: StepProps) {
           <ControlledInput
             control={control}
             name="confirmAccountNumber"
-            label="Reconfirm Bank Account Number"
+            label="Confirm Bank Account Number"
+            labelWeight="semiBold"
             placeholder="Re-enter your account number"
             keyboardType="number-pad"
             maxLength={18}
@@ -385,6 +387,7 @@ export function BankDetailsStep({ onNext, onPrev }: StepProps) {
             control={control}
             name="accountHolderName"
             label="Account Holder Name"
+            labelWeight="semiBold"
             placeholder="Name as on bank account"
             autoCapitalize="words"
             required
@@ -396,6 +399,7 @@ export function BankDetailsStep({ onNext, onPrev }: StepProps) {
             control={control}
             name="accountType"
             label="Account Type"
+            labelWeight="semiBold"
             options={ACCOUNT_TYPE_OPTIONS}
             placeholder="Select account type"
             required
@@ -407,6 +411,7 @@ export function BankDetailsStep({ onNext, onPrev }: StepProps) {
               render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <FormInput
                   label="IFSC Code"
+                  labelWeight="semiBold"
                   value={value ?? ''}
                   onChangeText={(text) => handleIfscChange(text, onChange)}
                   onBlur={() => {
@@ -457,6 +462,7 @@ export function BankDetailsStep({ onNext, onPrev }: StepProps) {
             control={control}
             name="bankName"
             label="Bank Name"
+            labelWeight="semiBold"
             placeholder="e.g. ICICI Bank"
             autoCapitalize="words"
             required
@@ -468,6 +474,7 @@ export function BankDetailsStep({ onNext, onPrev }: StepProps) {
             control={control}
             name="branchName"
             label="Branch Name"
+            labelWeight="semiBold"
             placeholder="e.g. Indiranagar"
             autoCapitalize="words"
             required
@@ -517,7 +524,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   helperText: {
-    fontSize: typography.fontSize.xxs,
+    color: colors.text.black,
+    fontSize: typography.fontSize.xs,
+    lineHeight: typography.fontSize.xs * typography.lineHeight.normal,
   },
   helperTextSuccess: {
     color: colors.success.main,

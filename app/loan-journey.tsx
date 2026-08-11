@@ -24,6 +24,7 @@ export default function LoanJourneyScreen() {
   const phaseIndex = useFlowStore((s) => s.phaseIndex);
   const substepIndex = useFlowStore((s) => s.substepIndex);
   const goTo = useFlowStore((s) => s.goTo);
+  const setShowOfferStatusModal = useFlowStore((s) => s.setShowOfferStatusModal);
 
   const flowId = Array.isArray(params.id) ? params.id[0] : params.id;
   const shouldTreatJourneyAsCompleted = isCblOrRejectedStage(userStage);
@@ -66,14 +67,28 @@ export default function LoanJourneyScreen() {
     const isAlreadyOnApprovedOfferStep =
       currentPhase === 'offer' && substepIndex === approvedOfferSubstepIndex;
 
-    if (isAlreadyOnApprovedOfferStep) return;
-    navigateToPhaseSubstep({
-      goTo,
-      phase: 'offer',
-      substepId: 'approved-offer',
-      source: 'LoanJourney:OfferingsEntry',
-    });
-  }, [flowId, goTo, phaseIndex, shouldTreatJourneyAsCompleted, substepIndex, userStage]);
+    if (!isAlreadyOnApprovedOfferStep) {
+      navigateToPhaseSubstep({
+        goTo,
+        phase: 'offer',
+        substepId: 'approved-offer',
+        source: 'LoanJourney:OfferingsEntry',
+      });
+    }
+
+    // A user returning after application review already has the OFFERINGS stage,
+    // so the earlier soft-pull/bank-connect callbacks that normally open this
+    // success screen are no longer mounted. Show it explicitly before loan details.
+    setShowOfferStatusModal(true, 'Verified');
+  }, [
+    flowId,
+    goTo,
+    phaseIndex,
+    setShowOfferStatusModal,
+    shouldTreatJourneyAsCompleted,
+    substepIndex,
+    userStage,
+  ]);
 
   if (shouldTreatJourneyAsCompleted) {
     return <View style={styles.container} />;

@@ -28,6 +28,7 @@ import personalLoan from '@/assets/images/personal-loan.png';
 import travelLoan from '@/assets/images/travel-loan.png';
 import increasedCoins from '@/assets/images/increasing-coin.png';
 import congratulationSuccess from '@/assets/images/congratulation-success.png';
+import offerCongratulations from '@/assets/images/offer-congratulations.svg';
 import offerAcceptance from '@/assets/images/offer-acceptance.png';
 import offerRejection from '@/assets/images/offer-rejection.png';
 import loanAgreement from '@/assets/images/loan-agreement.png';
@@ -35,7 +36,7 @@ import failedEsign from '@/assets/images/failed-esign.png';
 import digilocker from '@/assets/images/digilocker.png';
 import tools from '@/assets/images/tools.png';
 import whatsappIcon from '@/assets/images/whatsapp-icon.png';
-import lock from '@/assets/images/lock.jpeg';
+import lock from '@/assets/images/pdf-password-lock.png';
 import underReview from '@/assets/images/under-review.png';
 import offerVerified from '@/assets/images/offer-verified.png';
 import noOfferAvailable from '@/assets/images/no-offer-available.png';
@@ -97,6 +98,7 @@ export const IMAGES = {
   TRAVEL_LOAN: travelLoan,
   INCREASED_COINS: increasedCoins,
   CONGRATULATION_SUCCESS: congratulationSuccess,
+  OFFER_CONGRATULATIONS: offerCongratulations,
   OFFER_ACCEPTANCE: offerAcceptance,
   OFFER_REJECTION: offerRejection,
   LOAN_AGREEMENT: loanAgreement,

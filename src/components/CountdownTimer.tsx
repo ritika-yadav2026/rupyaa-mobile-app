@@ -51,7 +51,7 @@ export function CountdownTimer({
 
   const formatTime = (time: number) => {
     if (secondsOnlyFormat) {
-      return `00:${time.toString().padStart(2, '0')}`;
+      return `00:${time.toString().padStart(2, '0')}s`;
     }
     const mins = Math.floor(time / 60);
     const secs = time % 60;
@@ -94,12 +94,16 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.text.secondary,
+    fontSize: 14,
+    lineHeight: 21,
   },
   timer: {
     color: colors.text.tertiary,
   },
   link: {
     color: colors.primary.main,
+    fontSize: 14,
+    lineHeight: 21,
     textDecorationLine: 'underline',
   },
 });

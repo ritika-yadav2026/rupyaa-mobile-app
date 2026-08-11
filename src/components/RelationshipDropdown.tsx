@@ -16,6 +16,7 @@ interface ControlledRelationshipDropdownProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
   label: string;
+  labelWeight?: 'regular' | 'medium' | 'semiBold' | 'bold';
   /** Title shown inside the dropdown modal. Defaults to "Relationship to you". */
   modalTitle?: string;
   required?: boolean;
@@ -30,6 +31,7 @@ export function ControlledRelationshipDropdown<T extends FieldValues>({
   control,
   name,
   label,
+  labelWeight,
   modalTitle = 'Relationship to you',
   required = false,
   placeholder = 'Select relationship',
@@ -41,6 +43,7 @@ export function ControlledRelationshipDropdown<T extends FieldValues>({
       render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
         <DropdownSelect<RelationshipValue>
           label={label}
+          labelWeight={labelWeight}
           modalTitle={modalTitle}
           value={value as RelationshipValue | undefined}
           options={RELATIONSHIP_OPTIONS}

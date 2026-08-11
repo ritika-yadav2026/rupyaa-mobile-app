@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     width: '100%',
-    marginBottom: spacing.xs,
+    marginBottom: 0,
   },
   headerSpacer: {
     flex: 1,
@@ -206,7 +206,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   pdfPasswordImage: {
-    width: 100,
-    height: 100,
+    width: 60,
+    height: 60,
+    marginBottom: spacing.xl,
   },
 });

@@ -13,6 +13,7 @@ export interface DropdownOption<T = unknown> {
 
 interface DropdownSelectProps<T = unknown> {
   label: string;
+  labelWeight?: 'regular' | 'medium' | 'semiBold' | 'bold';
   /** Title shown inside the modal. Falls back to `label` if omitted. */
   modalTitle?: string;
   value?: T;
@@ -28,6 +29,7 @@ interface DropdownSelectProps<T = unknown> {
 
 export function DropdownSelect<T = unknown>({
   label,
+  labelWeight = 'medium',
   modalTitle,
   value,
   options,
@@ -63,7 +65,7 @@ export function DropdownSelect<T = unknown>({
 
   return (
     <View style={styles.container}>
-      <AppText style={styles.label}>
+      <AppText style={styles.label} weight={labelWeight}>
         {t(label)}
         {required && <AppText style={styles.required}> *</AppText>}
       </AppText>
@@ -137,7 +139,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: typography.fontSize.sm,
-    fontFamily: typography.fontFamily.medium,
     color: colors.text.primary,
     marginBottom: spacing.sm,
   },

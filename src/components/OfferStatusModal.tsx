@@ -19,14 +19,15 @@ import { consoleLogDev, formatCurrency } from '@/src/utils/common-helper';
 import { isCurrentOfferSuccess } from '@/src/types/offer';
 import { BadgeCheck } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { SvgUri } from 'react-native-svg';
 
 const ANIMATION_DURATION = 280;
 const SLIDE_OFFSET = 32;
 const SPRING_TENSION = 70;
 const SPRING_FRICTION = 11;
 const ILLUSTRATION_SIZE = 200;
-const VERIFIED_BADGE_SIZE = 72;
-const VERIFIED_BADGE_IMAGE_SIZE = 52;
+const VERIFIED_BADGE_SIZE = 120;
+const VERIFIED_BADGE_IMAGE_SIZE = 120;
 const VERIFIED_ICON_SIZE = 12;
 const OVERLAY_Z_INDEX = 9999;
 
@@ -103,10 +104,10 @@ export function OfferStatusModal({
       return (
         <>
           <View style={styles.verifiedBadge}>
-            <Image
-              source={IMAGES.CONGRATULATION_SUCCESS}
-              resizeMode="contain"
-              style={styles.verifiedBadgeImage}
+            <SvgUri
+              uri={Image.resolveAssetSource(IMAGES.OFFER_CONGRATULATIONS).uri}
+              width={VERIFIED_BADGE_IMAGE_SIZE}
+              height={VERIFIED_BADGE_IMAGE_SIZE}
               accessibilityLabel="Verified loan offer"
             />
           </View>
@@ -116,7 +117,7 @@ export function OfferStatusModal({
           <AppText style={styles.verifiedSubtitle} variant="captionSmall">
             You’re eligible for a loan offer of
           </AppText>
-          <AppText style={styles.verifiedAmount} variant="h1" weight="bold">
+          <AppText style={styles.verifiedAmount} variant="h1" weight="semiBold">
             {amountLabel}
           </AppText>
           <View style={styles.verifiedProfileRow}>
@@ -278,7 +279,7 @@ const styles = StyleSheet.create({
   },
   verifiedScrollContent: {
     justifyContent: 'flex-start',
-    paddingTop: spacing['3xl'],
+    paddingTop: spacing['5xl'],
   },
   offerAmountContainer: {
     flexDirection: 'row',
@@ -300,27 +301,28 @@ const styles = StyleSheet.create({
     borderRadius: VERIFIED_BADGE_SIZE / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.background.tertiary,
-    marginBottom: spacing.xl,
-  },
-  verifiedBadgeImage: {
-    width: VERIFIED_BADGE_IMAGE_SIZE,
-    height: VERIFIED_BADGE_IMAGE_SIZE,
+    marginBottom: spacing['2xl'],
   },
   verifiedTitle: {
     color: colors.text.primary,
+    fontSize: 24,
+    lineHeight: 36,
     textAlign: 'center',
-    marginBottom: spacing.xs,
+    marginBottom: spacing.md,
   },
   verifiedSubtitle: {
     color: colors.text.secondary,
+    fontSize: 16,
+    lineHeight: 24,
     textAlign: 'center',
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
   verifiedAmount: {
     color: colors.text.primary,
+    fontSize: 60,
+    lineHeight: 72,
     textAlign: 'center',
-    marginBottom: spacing.md,
+    marginBottom: spacing.base,
   },
   verifiedProfileRow: {
     flexDirection: 'row',
@@ -330,6 +332,8 @@ const styles = StyleSheet.create({
   },
   verifiedProfileText: {
     color: colors.text.secondary,
+    fontSize: 16,
+    lineHeight: 24,
   },
   title: {
     color: colors.text.primary,

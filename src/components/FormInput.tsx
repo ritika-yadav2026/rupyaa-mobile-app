@@ -7,6 +7,7 @@ import { AppText } from './AppText';
 
 interface FormInputProps extends TextInputProps {
   label: string;
+  labelWeight?: 'regular' | 'medium' | 'semiBold' | 'bold';
   labelAccessory?: ReactNode;
   /** Rendered inside the input box on the left (e.g. "+91" prefix). */
   leftAccessory?: ReactNode;
@@ -22,6 +23,7 @@ interface FormInputProps extends TextInputProps {
 
 export function FormInput({
   label,
+  labelWeight = 'medium',
   labelAccessory,
   leftAccessory,
   rightAccessory,
@@ -44,7 +46,7 @@ export function FormInput({
   return (
     <View style={styles.container}>
       <View style={styles.labelRow}>
-        <AppText style={styles.label}>
+        <AppText style={styles.label} weight={labelWeight}>
           {t(label)}
           {required && <AppText style={styles.required}> *</AppText>}
         </AppText>
@@ -106,7 +108,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: typography.fontSize.sm,
-    fontFamily: typography.fontFamily.medium,
     color: colors.text.primary,
     flex: 1,
   },

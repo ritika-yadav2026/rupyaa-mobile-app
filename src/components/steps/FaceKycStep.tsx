@@ -608,7 +608,7 @@ export function FaceKycStep({ onNext, onPrev }: StepProps) {
       }
     >
       <View style={styles.content}>
-        <AppText style={styles.title} variant="h3" weight="bold">
+        <AppText style={styles.title} variant="h3" weight="semiBold">
           Complete Your Face KYC
         </AppText>
         <AppText style={styles.subtitle} variant="body">
@@ -621,8 +621,8 @@ export function FaceKycStep({ onNext, onPrev }: StepProps) {
           <View style={styles.cardIconWrapper}>
             <SvgUri
               uri={Image.resolveAssetSource(IMAGES.FACE_KYC_INTRO).uri}
-              width="100%"
-              height="100%"
+              width="80%"
+              height="80%"
               accessibilityLabel="Face verification"
             />
           </View>
@@ -672,7 +672,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.text.primary,
-    fontSize: 22,
+    fontSize: 20,
     lineHeight: 28,
     marginBottom: 0,
   },
@@ -683,17 +683,20 @@ const styles = StyleSheet.create({
     paddingVertical: spacing['4xl'],
     minHeight: windowHeight * 0.6,
     height: '100%',
+    backgroundColor: colors.background.primary,
   },
   subtitle: {
     color: colors.text.gray,
-    lineHeight: 24,
+    lineHeight: 16,
+    fontSize: 12,
     marginBottom: spacing.xl,
+    marginTop: spacing.xs,
   },
 
   /* Intro card */
   card: {
     minHeight: 192,
-    backgroundColor: colors.background.primary,
+    backgroundColor: colors.primary.lightest_3,
     borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.primary.main,
@@ -722,15 +725,19 @@ const styles = StyleSheet.create({
     color: colors.text.gray,
     textAlign: 'center',
     lineHeight: 18,
+    fontSize: 12,
+    marginTop: spacing.xs,
   },
 
   /* Tips section */
   tipsHeading: {
     color: colors.text.primary,
     marginBottom: spacing.md,
+    fontSize: 20,
   },
   tipsSection: {
     gap: spacing.md,
+    fontSize: 12,
   },
   tipRow: {
     flexDirection: 'row',
@@ -740,7 +747,7 @@ const styles = StyleSheet.create({
   tipIconBg: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius:20,
     backgroundColor: colors.primary.lightest,
     alignItems: 'center',
     justifyContent: 'center',
@@ -748,6 +755,7 @@ const styles = StyleSheet.create({
   tipText: {
     color: colors.text.secondary,
     flex: 1,
+    fontSize: 13,
   },
 
   /* Verifying screen */

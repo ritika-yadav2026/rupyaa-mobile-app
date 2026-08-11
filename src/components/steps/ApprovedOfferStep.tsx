@@ -286,7 +286,7 @@ const detailStyles = StyleSheet.create({
     color: colors.text.primary,
   },
   card: {
-    backgroundColor: colors.background.secondary,
+    backgroundColor: colors.background.primary,
     borderRadius: radius.xl,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
