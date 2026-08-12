@@ -44,6 +44,7 @@ import applicationRejected from '@/assets/images/application-rejected.png';
 import zapcashLoading from '@/assets/videos/zapcash-loading.gif';
 import icon from '@/assets/images/icon.png';
 import enachSuccess from '@/assets/images/enach-success.png'; 
+import enachShield from '@/assets/images/enach-shield.svg';
 import esignSuccess from '@/assets/images/esign-success.png';
 import esignVerification from '@/assets/images/esign-verification.svg';
 import activeLoan from '@/assets/images/active-loan.png';
@@ -68,6 +69,7 @@ import nonSalaryAccount from '@/assets/images/non-salary-account.svg';
 import winStar from '@/assets/images/win-star.png';
 import supportAgent from '@/assets/images/support-agent.png';
 import assuranceCheckbox from '@/assets/images/assurance-checkbox.svg';
+import noPendingDocuments from '@/assets/images/no-pending-documents.png';
 
 // const BUCKET_IMAGE_URL = 'https://wecredit-main-website-assets.s3.ap-south-1.amazonaws.com';
 
@@ -108,6 +110,7 @@ export const IMAGES = {
   WHATSAPP_ICON: whatsappIcon,
   LOCK: lock,
   ENACH_SUCCESS: enachSuccess,
+  ENACH_SHIELD: enachShield,
   ESIGN_SUCCESS: esignSuccess,
   ESIGN_VERIFICATION: esignVerification,
   Z_ICON: zIcon,
@@ -132,6 +135,7 @@ export const IMAGES = {
   NO_DOCUMENT: noDocuments,
   PAYMENT_SUCCESS: paymentSuccess,
   NO_LOAN: noLoan,
+  NO_PENDING_DOCUMENTS: noPendingDocuments,
   GRID_IMAGE: gridImage,
   TIGER: tiger,
   LETSTALK: letstalk,

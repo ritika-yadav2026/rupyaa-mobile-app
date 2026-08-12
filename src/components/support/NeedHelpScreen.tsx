@@ -213,7 +213,7 @@ export function NeedHelpScreen(): React.JSX.Element {
           <ControlledDropdown<NeedHelpFormValues, string>
             control={control}
             name="applicationNumber"
-            label="APPLICATION NUMBER"
+            label="Application Number"
             options={applicationOptions}
             placeholder="Select application number"
           />
@@ -221,21 +221,21 @@ export function NeedHelpScreen(): React.JSX.Element {
         <ControlledDropdown<NeedHelpFormValues, SupportIssueValue>
           control={control}
           name="issueCategory"
-          label="SELECT ISSUE"
+          label="Select Issue"
           options={SUPPORT_ISSUE_OPTIONS}
           placeholder="Select an issue category"
         />
         <ControlledInput
           control={control}
           name="subject"
-          label="SUBJECT"
+          label="Subject"
           placeholder="Enter an issue subject"
           required
         />
         <ControlledInput
           control={control}
           name="description"
-          label="DESCRIPTION"
+          label="Description"
           placeholder="Please describe your concern in detail..."
           multiline
           style={styles.descriptionInput}

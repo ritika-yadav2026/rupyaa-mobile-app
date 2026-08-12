@@ -9,9 +9,11 @@ import {
   ImageStyle,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { colors, spacing } from '@/src/theme';
 import { AppText } from './AppText';
 import { Button } from './Button';
+import { RupyaaLogo } from './RupyaaLogo';
 import { IMAGES } from '../constants/images';
 import { commonStyles } from '../utils/common-styles';
 
@@ -33,7 +35,7 @@ const SLIDE_OFFSET = 32;
 const SPRING_TENSION = 70;
 const SPRING_FRICTION = 11;
 /** Line height in px for the body message — matches Poppins bodyLarge at 18px with relaxed leading. */
-const MESSAGE_LINE_HEIGHT = 26;
+const MESSAGE_LINE_HEIGHT = 22;
 /** z-order that guarantees this overlay sits above all step form content within the same screen. */
 const OVERLAY_Z_INDEX = 9999;
 
@@ -97,6 +99,19 @@ export function UnderReviewModal({
         { paddingTop: insets.top, opacity: fadeAnim },
       ]}
     >
+      <LinearGradient
+        pointerEvents="none"
+        colors={[
+          colors.primary.main,
+          colors.primary.lightest_3,
+          colors.background.primary,
+        ]}
+        locations={[0, 0.16, 0.32]}
+        style={StyleSheet.absoluteFill}
+      />
+      <View style={styles.header}>
+        <RupyaaLogo size="sm" />
+      </View>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -199,6 +214,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.base,
     paddingVertical: spacing['3xl'],
   },
+  header: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+  },
   body: {
     alignItems: 'center',
     width: '100%',
@@ -217,13 +236,14 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     lineHeight: MESSAGE_LINE_HEIGHT,
     width: 20,
-    fontSize: 14,
+    fontSize: 18,
   },
   bulletText: {
     flex: 1,
     color: colors.text.secondary,
     lineHeight: MESSAGE_LINE_HEIGHT,
     textAlign: 'left',
+    // fontSize: 12,
   },
   statusBadge: {
     backgroundColor: colors.warning.bg,
@@ -239,12 +259,14 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     textAlign: 'center',
     marginBottom: spacing.xs,
+    fontSize: 18,
   },
   subtitle: {
     color: colors.text.secondary,
     textAlign: 'center',
-    lineHeight: MESSAGE_LINE_HEIGHT,
+    // lineHeight: MESSAGE_LINE_HEIGHT,
     marginBottom: spacing.md,
+    fontSize: 14,
   },
   message: {
     color: colors.text.secondary,
@@ -254,6 +276,7 @@ const styles = StyleSheet.create({
   messageEmphasis: {
     color: colors.text.secondary,
     lineHeight: MESSAGE_LINE_HEIGHT,
+    fontSize: 12,
   },
   footer: {
     paddingHorizontal: spacing.base,

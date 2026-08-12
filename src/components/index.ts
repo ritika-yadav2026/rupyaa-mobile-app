@@ -92,6 +92,7 @@ export {
   ZapcashLoading,
   type ZapcashLoadingProps,
 } from './ZapcashLoading';
+export { AnimatedLoader, type AnimatedLoaderProps } from './AnimatedLoader';
 export {
   OfferResultModal,
   type OfferResultModalProps,

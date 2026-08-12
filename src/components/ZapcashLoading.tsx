@@ -3,23 +3,20 @@ import {
   View,
   StyleSheet,
   Animated,
-  Easing,
-  ActivityIndicator,
   Image,
   type ImageSourcePropType,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing } from '@/src/theme';
 import { AppText } from './AppText';
-import { IMAGES } from '@/src/constants/images';
 import { consoleLogDev } from '../utils/common-helper';
+import { AnimatedLoader } from './AnimatedLoader';
 
 const OVERLAY_Z_INDEX = 9999;
 const LOG_PREFIX = '[ZapcashLoading]';
 const GIF_SIZE = 40;
 // const SPINNER_SIZE = GIF_SIZE + 40; // Spinner slightly larger than icon
-const SPINNER_SIZE = GIF_SIZE + 25;
-const SPINNER_STROKE_WIDTH = 3;
+const SPINNER_SIZE = GIF_SIZE + 12;
 
 export interface ZapcashLoadingProps {
   /** When true, the full-screen loading overlay is visible. */
@@ -48,12 +45,11 @@ export function ZapcashLoading({
   title,
   message,
   source = 'unknown',
-  gifSource=IMAGES.Z_ICON,
+  gifSource,
   reassuranceText,
 }: ZapcashLoadingProps): React.JSX.Element | null {
   const insets = useSafeAreaInsets();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
   const prevVisibleRef = useRef(false);
 
   useEffect(() => {
@@ -84,27 +80,6 @@ export function ZapcashLoading({
     }).start();
   }, [visible, fadeAnim]);
 
-  // Perfectly smooth rotation — Easing.linear ensures constant speed with no ease-in/out
-  // between loop iterations, eliminating any visible stutter or jerk.
-  useEffect(() => {
-    rotateAnim.setValue(0);
-    const animation = Animated.loop(
-      Animated.timing(rotateAnim, {
-        toValue: 1,
-        duration: 1200,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      })
-    );
-    animation.start();
-    return () => animation.stop();
-  }, [rotateAnim]);
-
-  const spin = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
   if (!visible) return null;
 
   return (
@@ -121,24 +96,14 @@ export function ZapcashLoading({
       <View style={styles.content}>
           <View style={styles.iconContainer}>
             {gifSource != null ? (
-              <>
-                <Animated.View
-                  style={[
-                    styles.spinnerRing,
-                    {
-                      transform: [{ rotate: spin }],
-                    },
-                  ]}
-                />
-                <Image
-                  source={gifSource}
-                  style={styles.gif}
-                  resizeMode="contain"
-                  accessibilityLabel="Loading"
-                />
-              </>
+              <Image
+                source={gifSource}
+                style={styles.gif}
+                resizeMode="contain"
+                accessibilityLabel="Loading"
+              />
             ) : (
-              <ActivityIndicator size="large" color={colors.primary.main} style={styles.spinner} />
+              <AnimatedLoader size={SPINNER_SIZE} />
             )}
           </View>
           {title != null && title.length > 0 ? (
@@ -185,19 +150,6 @@ const styles = StyleSheet.create({
     height: SPINNER_SIZE,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: spacing.lg,
-  },
-  spinnerRing: {
-    position: 'absolute',
-    width: SPINNER_SIZE,
-    height: SPINNER_SIZE,
-    borderRadius: SPINNER_SIZE / 2,
-    borderWidth: SPINNER_STROKE_WIDTH,
-    borderColor: colors.primary.lightest || colors.primary.light,
-    borderTopColor: colors.primary.main,
-    borderRightColor: colors.primary.main,
-  },
-  spinner: {
     marginBottom: spacing.lg,
   },
   gif: {

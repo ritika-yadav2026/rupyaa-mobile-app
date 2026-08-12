@@ -14,6 +14,7 @@ interface ApplyForLoanHomeViewProps {
   actionLabel: string;
   heroContent?: React.ReactNode;
   hideJourney?: boolean;
+  hideJourneyProgress?: boolean;
   onApplyPress?: () => void;
   onCreditScorePress: () => void;
   onContactPress: () => void;
@@ -63,6 +64,7 @@ export function ApplyForLoanHomeView({
   actionLabel,
   heroContent,
   hideJourney = false,
+  hideJourneyProgress = false,
   onApplyPress,
   onCreditScorePress,
   onContactPress,
@@ -87,19 +89,23 @@ export function ApplyForLoanHomeView({
 
       {!hideJourney ? (
         <View style={styles.journeyCard}>
-          <AppText variant="caption" weight="semiBold" style={styles.journeyTitle}>
-            {journeyTitle}
-          </AppText>
-          <View style={styles.progressTrack}>
-            {journeySteps.map((step, index) => (
-              <View style={styles.step} key={step.id}>
-                <View style={getStepLineStyle(index, phaseIndex, passedPhases, step.id)} />
-                <AppText style={styles.stepLabel} variant="captionExtraSmall">
-                  {step.label}
-                </AppText>
+          {!hideJourneyProgress ? (
+            <>
+              <AppText variant="caption" weight="semiBold" style={styles.journeyTitle}>
+                {journeyTitle}
+              </AppText>
+              <View style={styles.progressTrack}>
+                {journeySteps.map((step, index) => (
+                  <View style={styles.step} key={step.id}>
+                    <View style={getStepLineStyle(index, phaseIndex, passedPhases, step.id)} />
+                    <AppText style={styles.stepLabel} variant="captionExtraSmall">
+                      {step.label}
+                    </AppText>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
+            </>
+          ) : null}
           {showJourneyAction ? (
             <TouchableOpacity style={styles.detailsRow} onPress={onApplyPress} activeOpacity={0.85}>
               <View style={styles.shield}>

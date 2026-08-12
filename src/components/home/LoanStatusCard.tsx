@@ -155,7 +155,7 @@ export function LoanStatusCard({
         </View>
 
         {heading && <AppText variant="h3" weight="semiBold" style={styles.heading}>
-          {heading}
+          {heading}jdkjheygy
         </AppText>}
         {amount != null && typeof amount === 'number' && (
           <AppText variant="body" weight="semiBold" style={styles.amountText}>

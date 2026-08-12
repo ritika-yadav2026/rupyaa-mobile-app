@@ -30,7 +30,7 @@ export const FLOW_CONFIG = {
   },
   offer: {
     id: 'offer',
-    label: 'Offer',
+    label: 'KYC',
     substeps: [
       // Bank statement upload when no immediate offer is available after SOFT_PULL
       { id: 'bank-connect', label: 'Bank Connect', component: 'BankConnectStep' },

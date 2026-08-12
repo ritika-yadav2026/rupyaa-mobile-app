@@ -68,10 +68,11 @@ export function FullScreenModal({
             pointerEvents="none"
             colors={[
               colors.primary.main,
-              colors.primary.lightest_3,
+              'rgba(254, 202, 66, 0.12)',
+              'rgba(254, 202, 66, 0.03)',
               colors.background.primary,
             ]}
-            locations={[0, 0.18, 0.42]}
+            locations={[0, 0.18, 0.36, 0.55]}
             style={StyleSheet.absoluteFill}
           />
         ) : null}

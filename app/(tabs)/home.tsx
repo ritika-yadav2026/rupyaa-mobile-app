@@ -364,6 +364,9 @@ export default function HomeTab() {
   }
 
   const resolvedHomeCardProps = buildLoanStatusCardProps();
+  const isUnderReviewState =
+    userStage === UserStagesInBackend.APPLICATION_STATUS ||
+    isLoanStatusPending(activeLoanQuery.data?.loanStatus);
   const isInitialUnsyncedState =
     userStage == null && phaseIndex === 0 && substepIndex === 0 && !applicationCompleted;
   const isRegisterStage =
@@ -426,6 +429,7 @@ export default function HomeTab() {
           actionLabel={resolvedHomeCardProps.actionLabel || 'Apply for Loan'}
           heroContent={renderLoanStatusSection()}
           hideJourney={isCblOrRejectedStage(userStage)}
+          hideJourneyProgress={isUnderReviewState}
           onApplyPress={resolvedHomeCardProps.onActionPress}
           onCreditScorePress={handleCreditReportPress}
           onContactPress={() => router.push('/need-help')}
