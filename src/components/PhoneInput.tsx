@@ -1,7 +1,8 @@
 import React, { type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, TextInput, StyleSheet, TextInputProps } from 'react-native';
-import { colors, spacing, radius, typography } from '@/src/theme';
+import { colors, spacing, radius, typography, getFieldTextStyle } from '@/src/theme';
+import { useLocaleStore } from '@/src/store/useLocaleStore';
 import { AppText } from './AppText';
 
 interface PhoneInputProps extends Omit<TextInputProps, 'onChange'> {
@@ -30,6 +31,8 @@ export function PhoneInput({
   ...props
 }: PhoneInputProps) {
   const { t } = useTranslation();
+  const language = useLocaleStore((state) => state.language);
+  const fieldTextStyle = getFieldTextStyle(language);
   const handleChange = (text: string) => {
     const numericText = text.replace(/[^0-9]/g, '');
     if (numericText.length <= 10) {
@@ -58,7 +61,7 @@ export function PhoneInput({
         </View>
         <TextInput
           ref={inputRef}
-          style={[styles.input, compact && styles.inputCompact]}
+          style={[styles.input, fieldTextStyle]}
           value={value}
           onChangeText={handleChange}
           keyboardType="number-pad"
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   inputWrapperCompact: {
-    height: 32,
+    height: 48,
   },
   countryFlag: {
     marginRight: spacing.sm,
@@ -121,20 +124,13 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
   },
   countryCodeCompact: {
-    fontSize: typography.fontSize.xs,
+    fontSize: typography.fontSize.sm,
   },
   input: {
     flex: 1,
-    fontSize: typography.fontSize.sm,
-    fontFamily: typography.fontFamily.medium,
-    color: colors.text.primary,
     height: '100%',
     paddingVertical: 0,
     textAlignVertical: 'center',
-    includeFontPadding: false,
-  },
-  inputCompact: {
-    fontSize: typography.fontSize.xs,
   },
   errorText: {
     color: colors.error.main,

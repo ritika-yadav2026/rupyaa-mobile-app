@@ -153,7 +153,7 @@ export default function OTPVerificationScreen() {
               style={styles.continueButton}
               textStyle={styles.continueButtonText}
             >
-              Continue
+              Verify OTP
             </Button>
           </>
         }
@@ -161,12 +161,12 @@ export default function OTPVerificationScreen() {
         <View style={styles.content}>
           <View style={styles.titleContainer}>
             <AppText style={styles.title} variant="h3" weight="bold">
-              Enter the OTP sent to
+              Enter OTP
             </AppText>
             <View style={styles.phoneNumberContainer}>
               <TouchableOpacity onPress={handleChangePhoneNumber} style={styles.changeButton}>
                 <AppText style={styles.phoneNumber} variant="caption" weight="regular">
-                  {displayPhoneNumber}
+                  We've sent a 4-digit OTP to {displayPhoneNumber}
                 </AppText>
               </TouchableOpacity>
             </View>
@@ -189,7 +189,8 @@ export default function OTPVerificationScreen() {
               onResend={handleResend}
               textBefore="Didn't receive the OTP?"
               linkText="Resend"
-              accentColor={colors.warning.main}
+              textColor={colors.text.primary}
+              accentColor={colors.text.primary}
               secondsOnlyFormat
             />
           </View>
@@ -218,7 +219,6 @@ const styles = StyleSheet.create({
   title: {
     color: colors.text.primary,
     marginBottom: 0,
-    fontSize: typography.fontSize.base,
     lineHeight: typography.fontSize.base * typography.lineHeight.normal,
   },
   phoneNumberContainer: {
@@ -226,8 +226,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   phoneNumber: {
-    color: colors.text.secondary,
-    fontSize: typography.fontSize.xxs,
+    color: colors.text.primary,
+    marginTop: spacing.xs,
   },
   changeButton: {
     paddingVertical: 0,
@@ -255,13 +255,13 @@ const styles = StyleSheet.create({
     marginBottom: spacing.base,
   },
   continueButton: {
-    height: 38,
+    height: 48,
     borderRadius: radius.md,
     backgroundColor: colors.warning.light,
     paddingVertical: 0,
   },
   continueButtonText: {
     color: colors.text.black,
-    fontSize: typography.fontSize.xxs,
+    fontSize: typography.fontSize.base,
   },
 });

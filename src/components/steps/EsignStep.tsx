@@ -191,7 +191,10 @@ export function EsignStep({ onNext, onPrev }: StepProps) {
   }, [isInitiating]);
 
   const handleVerifyGoogleAndProceed = useCallback(async (): Promise<void> => {
+    debugger;
     if (isGoogleVerifying || isInitiating) return;
+
+    debugger;
 
     setIsGoogleVerifying(true);
     setFailureMessage('');
@@ -301,6 +304,7 @@ export function EsignStep({ onNext, onPrev }: StepProps) {
   // }, [onNext]);
 
   const handleCtaPress = useCallback(() => {
+    debugger;
     if (isOauthDone) {
       void handleProceedToEsign();
     } else {

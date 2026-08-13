@@ -274,8 +274,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
   },
   formBlock: {
-    gap: spacing.md,
-    paddingTop: spacing.lg,
+    gap: spacing.sm,
+    paddingTop: spacing.sm,
   },
   descriptionInput: {
     minHeight: 120,

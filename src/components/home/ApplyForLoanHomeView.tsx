@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, type StyleProp, type ViewStyle } from 'react-native';
 import { ArrowRight, ShieldCheck } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Circle, Path, SvgUri } from 'react-native-svg';
 import { AppText } from '../AppText';
 import { LimitHeroCard } from './LimitHeroCard';
@@ -128,6 +129,23 @@ export function ApplyForLoanHomeView({
       ) : null}
 
       <View style={styles.twoColumnRow}>
+        <View style={styles.helpCard}>
+          <AppText style={styles.helpTitle} variant="body" weight="semiBold">
+            Need Help?
+          </AppText>
+          <AppText style={styles.helpDescription} variant="captionSmall">
+            Our support team is available{'\n'}
+            <AppText style={styles.helpDescriptionStrong} variant="captionSmall" weight="semiBold">
+              24/7
+            </AppText>
+            .
+          </AppText>
+          <TouchableOpacity style={styles.contactButton} onPress={onContactPress} activeOpacity={0.85}>
+            <AppText style={styles.contactButtonText} variant="captionSmall" weight="semiBold">
+              Contact Us
+            </AppText>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity style={styles.creditCard} onPress={onCreditScorePress} activeOpacity={0.85}>
           <View style={styles.limitedOfferBadge}>
             <AppText style={styles.limitedOfferText} variant="captionExtraSmall" weight="semiBold">
@@ -140,7 +158,7 @@ export function ApplyForLoanHomeView({
             height={80}
             style={styles.creditImage}
           />
-          <AppText style={styles.whiteText} variant="captionSmall" weight="semiBold">
+          <AppText style={styles.whiteText} variant="caption" weight="semiBold">
             Check Credit Score
           </AppText>
           <AppText style={styles.creditDescription} variant="captionExtraSmall">
@@ -150,31 +168,22 @@ export function ApplyForLoanHomeView({
             </AppText>
           </AppText>
         </TouchableOpacity>
-        <View style={styles.helpCard}>
-          <AppText style={styles.helpTitle} variant="body" weight="semiBold">
-            Need Help?
-          </AppText>
-          <AppText style={styles.helpDescription} variant="caption">
-            Our support team is available{' '}
-            <AppText style={styles.helpDescriptionStrong} variant="caption" weight="semiBold">
-              24/7
-            </AppText>
-            .
-          </AppText>
-          <TouchableOpacity style={styles.contactButton} onPress={onContactPress} activeOpacity={0.85}>
-            <AppText style={styles.contactButtonText} variant="captionSmall" weight="semiBold">
-              Contact Us
-            </AppText>
-          </TouchableOpacity>
-        </View>
       </View>
 
       <View style={styles.dividerRow}>
-        <View style={styles.divider} />
-        <AppText style={styles.dividerText} variant="captionSmall">
+        <LinearGradient
+          colors={[colors.background.primary, colors.border.light, colors.text.gray]}
+          locations={[0, 0.35, 1]}
+          style={styles.divider}
+        />
+        <AppText style={styles.dividerText} variant="caption">
           How it works
         </AppText>
-        <View style={styles.divider} />
+        <LinearGradient
+          colors={[colors.text.gray, colors.border.light, colors.background.primary]}
+          locations={[0, 0.65, 1]}
+          style={styles.divider}
+        />
       </View>
       <View style={styles.howRow}>
         {howItWorks.map((item, index) => (
@@ -182,10 +191,13 @@ export function ApplyForLoanHomeView({
             <AppText style={[styles.number, index === 2 && styles.numberActive]} weight="semiBold">
               {item.number}
             </AppText>
-            <AppText style={styles.howTitle} variant="captionSmall" weight="semiBold">
+            <AppText style={styles.howTitle} variant="caption" weight="semiBold">
               {item.title}
             </AppText>
-            <AppText style={styles.howDescription} variant="captionExtraSmall">
+            <AppText
+              style={[styles.howDescription, index === 0 && styles.fillDetailsDescription]}
+              variant="captionExtraSmall"
+            >
               {item.description}
             </AppText>
           </View>
@@ -303,26 +315,43 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
+    marginTop: spacing.base,
   },
   contactButtonText: { color: colors.text.black },
   dividerRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  divider: { flex: 1, height: 1, backgroundColor: colors.border.main },
+  divider: { flex: 1, height: 1, borderRadius: radius.full },
   dividerText: { color: colors.text.gray },
   howRow: { flexDirection: 'row', gap: spacing.sm },
   howCard: {
     flex: 1,
-    minHeight: 126,
+    minHeight: 150,
     borderWidth: 1,
     borderColor: colors.primary.main,
     backgroundColor: colors.primary.lightest_2,
     borderRadius: radius.lg,
-    padding: spacing.sm,
+    padding: spacing.md,
   },
   howCardActive: { backgroundColor: colors.primary.main },
-  number: { color: colors.text.black, fontSize: typography.fontSize['2xl'], lineHeight: 30 },
+  number: {
+    color: colors.primary.main,
+    fontSize: typography.fontSize['5xl'],
+    lineHeight: typography.fontSize['5xl'],
+  },
   numberActive: { color: colors.text.black },
-  howTitle: { color: colors.text.black },
-  howDescription: { color: colors.text.black, marginTop: spacing.sm, lineHeight: 14 },
+  howTitle: {
+    color: colors.text.black,
+    fontSize: typography.fontSize.sm,
+    lineHeight: typography.fontSize.sm * typography.lineHeight.normal,
+  },
+  howDescription: {
+    color: colors.text.black,
+    marginTop: spacing.sm,
+    fontSize: typography.fontSize.xs,
+    lineHeight: typography.fontSize.xs * typography.lineHeight.normal,
+  },
+  fillDetailsDescription: {
+    marginTop: spacing.md,
+  },
   wordmarkRow: {
     minHeight: 88,
     flexDirection: 'row',
