@@ -4,7 +4,6 @@ import {
   StyleSheet,
   ScrollView,
   Image,
-  ImageStyle,
   FlatList,
   Linking,
 } from 'react-native';
@@ -170,18 +169,19 @@ export default function AllLoansScreen() {
     return (
       <Screen scroll={false} edges={[]}>
         <View style={commonStyles.fullCenter}>
-          <Image
-            source={IMAGES.NO_LOAN}
-            resizeMode="contain"
-            style={commonStyles.image as ImageStyle}
-            accessibilityLabel="No loans"
-          />
-          <AppText variant="caption" color="tertiary" style={styles.subtitle}>
+          <View style={styles.emptyImageContainer}>
+            <Image
+              source={IMAGES.NO_LOAN}
+              resizeMode="contain"
+              style={styles.emptyStateImage}
+              accessibilityLabel="No ongoing loan"
+            />
+          </View>
+          <AppText variant="caption" color="black" style={styles.emptyStateSubtitle}>
             No active loans found. Apply now to get quick, hassle-free financing that fits your needs.
           </AppText>
-          {/* <AppText variant="captionSmall" color="tertiary" style={styles.description}>
-            No active loans. We'll notify you if anything is required.
-          </AppText> */}
+          {/* Matches Documents empty-state CTA height so illustration top gap stays the same. */}
+          <View style={styles.emptyStateBalance} />
         </View>
       </Screen>
     );
@@ -212,23 +212,26 @@ export default function AllLoansScreen() {
             showsVerticalScrollIndicator={false}
           >
             <View style={commonStyles.fullCenter}>
-              <Image
-                source={IMAGES.NO_LOAN}
-                resizeMode="contain"
-                style={styles.noLoanImage as ImageStyle}
-                accessibilityLabel={
-                  activeTab === 'ongoing' ? 'No ongoing loans' : 'No past loans'
-                }
-              />
+              <View style={styles.emptyImageContainer}>
+                <Image
+                  source={IMAGES.NO_LOAN}
+                  resizeMode="contain"
+                  style={styles.emptyStateImage}
+                  accessibilityLabel={
+                    activeTab === 'ongoing' ? 'No ongoing loans' : 'No past loans'
+                  }
+                />
+              </View>
               <AppText
                 variant="caption"
                 color="tertiary"
-                style={styles.subtitle}
+                style={styles.emptyStateSubtitle}
               >
                 {activeTab === 'ongoing'
                   ? 'No active loans found.'
                   : 'No previous loans found.'}
               </AppText>
+              <View style={styles.emptyStateBalance} />
             </View>
           </ScrollView>
         ) : (
@@ -305,9 +308,24 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
     alignItems: 'center',
   },
-  noLoanImage: {
+  emptyImageContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.lg,
+  },
+  emptyStateImage: {
     width: 200,
     height: 200,
+  },
+  emptyStateSubtitle: {
+    textAlign: 'center',
+    marginBottom: spacing.base,
+  },
+  emptyStateBalance: {
+    alignSelf: 'stretch',
+    height: 48,
+    marginTop: spacing.base,
   },
   subtitle: {
     textAlign: 'center',
