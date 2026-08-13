@@ -7,12 +7,10 @@
 import appLogo from '@/assets/images/app-logo.png';
 import rupyaaLogo from '@/assets/images/rupyaa-logo.svg';
 import customer_care from '@/assets/images/customer-care.png';
-import illustration1 from '@/assets/images/illustration-one.webp';
-import illustration2 from '@/assets/images/illustration-two.webp';
-import illustration3 from '@/assets/images/illustration-three.webp';
 import onboardingApplySteps from '@/assets/images/onboarding-apply-steps.png';
 import onboardingLoanOffer from '@/assets/images/onboarding-loan-offer.png';
 import onboardingApprovalBank from '@/assets/images/onboarding-approval-bank.png';
+
 import exclusiveOffer from '@/assets/images/offer-money.png';
 import loanEligibility from '@/assets/images/loan-eligibility.png';
 import trustBanner from '@/assets/images/trust-banner.png';
@@ -79,9 +77,6 @@ export const IMAGES = {
   ASSURANCE_CHECKBOX: assuranceCheckbox,
   RUPYAA_LOGO: rupyaaLogo,
   CUSTOMER_CARE: customer_care,
-  ILLUSTRATION_ONE: illustration1,
-  ILLUSTRATION_TWO: illustration2,
-  ILLUSTRATION_THREE: illustration3,
   ONBOARDING_APPLY_STEPS: onboardingApplySteps,
   ONBOARDING_LOAN_OFFER: onboardingLoanOffer,
   ONBOARDING_APPROVAL_BANK: onboardingApprovalBank,
