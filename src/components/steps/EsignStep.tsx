@@ -191,11 +191,9 @@ export function EsignStep({ onNext, onPrev }: StepProps) {
   }, [isInitiating]);
 
   const handleVerifyGoogleAndProceed = useCallback(async (): Promise<void> => {
-    debugger;
     if (isGoogleVerifying || isInitiating) return;
 
-    debugger;
-
+  
     setIsGoogleVerifying(true);
     setFailureMessage('');
 

@@ -83,13 +83,13 @@
     },
     "extra": {
       "otaUpdateNumberDev": "1",
-      "otaUpdateNumberProd": "1",
+      "otaUpdateNumberProd": "2",
       "versionDev": "1.0.1",
       "versionProd": "1.0.0",
       "versionProdIos": "1.0.0",
       "isDevelopment": true,
       "otaUpdateNumber": "1",
-      "environment": "production",
+      "environment": "production",    
       "disableCrashlytics": false,
       "router": {},
       "version": "1.0.38",
@@ -104,7 +104,6 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      
       "permissions": [
         "android.permission.READ_CONTACTS",
         "android.permission.WRITE_CONTACTS",

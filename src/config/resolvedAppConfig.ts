@@ -50,11 +50,11 @@ export function getMaxSmsToSync(): number {
 }
 
 export function getGoogleClientId(): string {
-  return getFromStore('googleClientId', appConfig.googleClientId) ?? appConfig.googleClientId;
+  return getFromStore('googleClientIdRupyaa', appConfig.googleClientIdRupyaa) ?? appConfig.googleClientIdRupyaa;
 }
 
 export function getAndroidGoogleClientId(): string {
-  return getFromStore('androidGoogleClientId', appConfig.androidGoogleClientId) ?? appConfig.androidGoogleClientId;
+  return getFromStore('androidGoogleClientIdRupyaa', appConfig.androidGoogleClientIdRupyaa) ?? appConfig.androidGoogleClientIdRupyaa;
 }
 
 export function getIosGoogleClientId(): string {
@@ -179,6 +179,44 @@ export function getEnablePreEnachReview(): boolean {
   const value = useAppConfigStore.getState().config?.enablePreEnachReview;
   return value === true;
 }
+
+
+
+
+/**
+ * SSL pinning master switch (from /external/config). Falls back to static
+ * appConfig.sslPinning.enabled when config isn't loaded yet.
+ */
+export function getEnableSslPinning(): boolean {
+  return getFromStore('enableSslPinning', appConfig.sslPinning.enabled) ?? appConfig.sslPinning.enabled;
+}
+
+/**
+ * Base64 public-key hashes to pin. Falls back to static hashes when the
+ * config value is missing or not a non-empty string array (never pin on empty).
+ */
+export function getSslPublicKeyHashes(): string[] {
+  const raw = useAppConfigStore.getState().config?.publicKeyHashes;
+  if (Array.isArray(raw) && raw.length > 0 && raw.every((h) => typeof h === 'string' && h.length > 0)) {
+    return raw;
+  }
+  return appConfig.sslPinning.publicKeyHashes;
+}
+
+export function getSslIncludeSubdomains(): boolean {
+  return getFromStore('includeSubdomains', appConfig.sslPinning.includeSubdomains) ?? appConfig.sslPinning.includeSubdomains;
+}
+
+/**
+ * Pinning expiry as YYYY-MM-DD. Backend sends an ISO date-time
+ * (e.g. "2026-11-04T00:00:00.000Z"); the native lib wants date-only.
+ */
+export function getSslPinningExpirationDate(): string {
+  const raw = getFromStore('sslPinningExpirationDate', appConfig.sslPinning.expirationDate);
+  const value = typeof raw === 'string' && raw.length > 0 ? raw : appConfig.sslPinning.expirationDate;
+  return value.split('T')[0];
+}
+
 
 /**
  * Whether API request/response encryption is enabled (from GET /external/encryption-status).

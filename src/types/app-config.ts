@@ -25,9 +25,9 @@ export interface ExternalAppConfigData {
   /** CredEau device-sync API base URL */
   credeauServerUrl?: string;
   /** Web OAuth client ID for Google Sign-In */
-  googleClientId?: string;
+  googleClientIdRupyaa?: string;
   /** Android OAuth client ID for Google Sign-In */
-  androidGoogleClientId?: string;
+  androidGoogleClientIdRupyaa?: string;
   /** iOS OAuth client ID for Google Sign-In */
   iosGoogleClientId?: string;
   /** When true, skip requesting READ_SMS on Android */
@@ -50,6 +50,16 @@ export interface ExternalAppConfigData {
   backgroundSyncIntervalSeconds?: number;
   /** Max inbox SMS messages to read/upload per Android sync run (Credeau) */
   maxSmsToSync?: number;
+
+
+  /** Master switch for SSL public-key pinning (from /external/config) */
+  enableSslPinning?: boolean;
+  /** Base64 SHA-256 public-key hashes to pin for the API host */
+  publicKeyHashes?: string[];
+  /** Whether pinning also applies to subdomains of the API host */
+  includeSubdomains?: boolean;
+  /** Pinning expiry; ISO date-time, normalized to YYYY-MM-DD before use */
+  sslPinningExpirationDate?: string;
 
   /** Phone numbers used for Play Store review; force SANDBOX for Cashfree E-NACH */
   playStorePhoneNumbers?: string[];
