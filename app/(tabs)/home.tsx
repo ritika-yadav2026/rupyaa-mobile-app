@@ -369,6 +369,8 @@ export default function HomeTab() {
     isLoanStatusPending(activeLoanQuery.data?.loanStatus);
   const isInitialUnsyncedState =
     userStage == null && phaseIndex === 0 && substepIndex === 0 && !applicationCompleted;
+  const shouldHideJourneyUntilDetailsSubmitted =
+    phaseIndex === 0 && substepIndex === 0 && !applicationCompleted;
   const isRegisterStage =
     userStage != null && USER_STAGE_GROUPS.register.includes(userStage);
   const isApplyForLoanState =
@@ -390,6 +392,7 @@ export default function HomeTab() {
         <ApplyForLoanHomeView
           amount={initialStateAmount}
           actionLabel={resolvedHomeCardProps.actionLabel || 'Apply for Loan'}
+          hideJourney={shouldHideJourneyUntilDetailsSubmitted}
           onApplyPress={handleResumeJourney}
           onCreditScorePress={handleCreditReportPress}
           onContactPress={() => router.push('/need-help')}

@@ -63,8 +63,8 @@ export const appConfig = {
   /** Direct WhatsApp chat (wa.me) — prefer this over building from the number. */
   whatsappSupportUrl: 'https://wa.me/918503090309?text=Hi',
 
-  grievanceOfficerEmail: "help@zapcash.in",
-  contactSupportTeamEmail: "care@zapcash.in",
+  grievanceOfficerEmail: "help@rupyaa.com",
+  contactSupportTeamEmail: "care@rupyaa.com",
 
 
  /**
@@ -92,13 +92,13 @@ export const appConfig = {
   playStoreUrl: 'https://play.google.com/store/apps/details?id=com.zapcash.loan',
 
   // Policy / legal (open in in-app webview)
-  privacyPolicyUrl: 'https://www.zapcash.in/privacy-policy?source=mobile',
-  termsUrl: 'https://www.zapcash.in/terms?source=mobile',
-  faqUrl: 'https://www.zapcash.in/faq?source=mobile',
-  supportUrl: 'https://www.zapcash.in/support?source=mobile',
-  lendingPartnersUrl: 'https://www.zapcash.in/lenders?source=mobile',
-  grievanceRedressalMechanismUrl: 'https://www.zapcash.in/grievance-redressal-mechanism?source=mobile',
-  grievanceRedressalPolicyUrl: 'https://www.zapcash.in/grievance-redressal-policy?source=mobile',
+  privacyPolicyUrl: 'https://www.rupyaa.com/privacy-policy?source=mobile',
+  termsUrl: 'https://www.rupyaa.com/terms?source=mobile',
+  faqUrl: 'https://www.rupyaa.com/faq?source=mobile',
+  supportUrl: 'https://www.rupyaa.com/support?source=mobile',
+  lendingPartnersUrl: 'https://www.rupyaa.com/lenders?source=mobile',
+  grievanceRedressalMechanismUrl: 'https://www.rupyaa.com/grievance-redressal-mechanism?source=mobile',
+  grievanceRedressalPolicyUrl: 'https://www.rupyaa.com/grievance-redressal-policy?source=mobile',
   // Bank connect: true = show manual PDF uploader first; false = normal AA WebView flow
 
   // Google Auth

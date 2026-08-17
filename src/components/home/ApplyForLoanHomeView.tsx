@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, type StyleProp, type ViewStyle } from 'react-native';
-import { ArrowRight, ShieldCheck } from 'lucide-react-native';
+import { ArrowRight } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Circle, Path, SvgUri } from 'react-native-svg';
 import { AppText } from '../AppText';
@@ -9,6 +9,10 @@ import { IMAGES } from '@/src/constants/images';
 import { colors, radius, spacing, typography } from '@/src/theme';
 import { getMainStepLabels, type FlowPhase } from '@/src/config/flowSteps';
 import { useFlowStore } from '@/src/store/useFlowStore';
+import journeyDetailsIcon from '@/assets/images/journey-details.svg';
+import journeyKycIcon from '@/assets/images/journey-kyc.svg';
+import journeyVerifyIcon from '@/assets/images/journey-verify.svg';
+import journeyFundsIcon from '@/assets/images/journey-funds.svg';
 
 interface ApplyForLoanHomeViewProps {
   amount: number;
@@ -26,6 +30,8 @@ const howItWorks = [
   { number: '2', title: 'Complete KYC', description: 'Aadhaar, OTP, Paperless' },
   { number: '3', title: 'Receive Money', description: 'Get the funds in 10 minutes.' },
 ] as const;
+
+const journeyIcons = [journeyDetailsIcon, journeyKycIcon, journeyVerifyIcon, journeyFundsIcon];
 
 function StylizedWatermarkU(): React.JSX.Element {
   return (
@@ -76,6 +82,7 @@ export function ApplyForLoanHomeView({
   const journeyTitle = `Loan in ${journeySteps.length} Easy Steps`;
   const journeyActionLabel = heroContent ? actionLabel : 'Complete Your Details';
   const showJourneyAction = typeof onApplyPress === 'function';
+  const journeyIcon = journeyIcons[phaseIndex] ?? journeyDetailsIcon;
 
   return (
     <View style={styles.container}>
@@ -110,7 +117,7 @@ export function ApplyForLoanHomeView({
           {showJourneyAction ? (
             <TouchableOpacity style={styles.detailsRow} onPress={onApplyPress} activeOpacity={0.85}>
               <View style={styles.shield}>
-                <ShieldCheck size={16} color={colors.text.black} />
+                <SvgUri uri={Image.resolveAssetSource(journeyIcon).uri} width={20} height={20} />
               </View>
               <View style={styles.detailsCopy}>
                 <AppText style={styles.detailsTitle} variant="captionSmall" weight="semiBold">

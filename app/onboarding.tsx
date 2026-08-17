@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     width: spacing['4xl'],
   },
   skipText: {
-    color: colors.text.secondary,
+    color: colors.text.primary,
   },
   carousel: {
     flex: 1,
