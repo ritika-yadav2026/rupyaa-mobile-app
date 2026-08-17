@@ -599,9 +599,9 @@ export function FaceKycStep({ onNext, onPrev }: StepProps) {
           loading={isFetchingLoanId}
           disabled={isFetchingLoanId}
           onPress={handleStartVerification}
-          leftIcon={
-            <Ionicons name="camera" size={18} color={colors.text.inverse} />
-          }
+          // leftIcon={
+          //   <Ionicons name="camera" size={18} color={colors.text.inverse} />
+          // }
         >
           Start Face Verification
         </Button>

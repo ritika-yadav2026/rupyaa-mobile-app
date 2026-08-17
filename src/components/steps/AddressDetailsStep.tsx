@@ -29,6 +29,7 @@ import { useIneligibilityModal } from '@/hooks/useIneligibilityModal';
 import ErrorContainer from '../ErrorContainer';
 import { appConfig } from '@/src/config/appConfig';
 import { ANALYTICS_EVENT, logAnalyticsEvent } from '@/src/services/analytics';
+import { consoleLogDev } from '@/src/utils/common-helper';
 
 type AddressDetailsFormData = z.input<typeof addressDetailsSchema>;
 type PincodeLookupMessage = { text: string; tone: 'info' | 'warning' } | null;
@@ -129,7 +130,7 @@ export function AddressDetailsStep({ onNext, onPrev }: StepProps) {
     let cancelled = false;
 
     const run = async () => {
-      setPincodeLookupLoading(true);
+            setPincodeLookupLoading(true);
       setIsCityStateEditable(false);
       clearErrors(['city', 'state']);
       setValue('city', '');
@@ -137,6 +138,7 @@ export function AddressDetailsStep({ onNext, onPrev }: StepProps) {
       try {
         const result = await getCityStateFromPincode(trimmed, controller.signal);
         if (cancelled) return;
+        debugger
 
         if (result.ok) {
           clearErrors('pinCode');

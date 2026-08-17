@@ -431,7 +431,7 @@ export default function HomeTab() {
           amount={resolvedHomeCardProps.amount ?? DEFAULT_ACTIVE_LOAN_AMOUNT}
           actionLabel={resolvedHomeCardProps.actionLabel || 'Apply for Loan'}
           heroContent={renderLoanStatusSection()}
-          hideJourney={isCblOrRejectedStage(userStage)}
+          hideJourney={isCblOrRejectedStage(userStage) || isUnderReviewState}
           hideJourneyProgress={isUnderReviewState}
           onApplyPress={resolvedHomeCardProps.onActionPress}
           onCreditScorePress={handleCreditReportPress}

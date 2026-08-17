@@ -398,7 +398,7 @@ export function BankDetailsStep({ onNext, onPrev }: StepProps) {
           <ControlledDropdown
             control={control}
             name="accountType"
-            label="Account Type"
+            label="Bank Account Type"
             labelWeight="semiBold"
             options={ACCOUNT_TYPE_OPTIONS}
             placeholder="Select account type"

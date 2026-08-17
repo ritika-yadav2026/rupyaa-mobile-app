@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   disclaimer: {
-    color: colors.text.secondary,
+    color: colors.text.primary,
     lineHeight: 18,
     marginBottom: spacing.md,
   },

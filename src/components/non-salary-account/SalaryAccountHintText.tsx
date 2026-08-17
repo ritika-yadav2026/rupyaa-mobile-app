@@ -26,7 +26,7 @@ export function SalaryAccountHintText({
       {salaryAccountSuffixes.map((suffix, index) => (
         <React.Fragment key={`${suffix}-${index}`}>
           {index > 0 ? ', ' : null}
-          <AppText variant="captionSmall" color="primary" weight="regular">
+          <AppText variant="captionSmall" color="black" weight="bold">
             {` ending with "${suffix}"`}
           </AppText>
         </React.Fragment>
