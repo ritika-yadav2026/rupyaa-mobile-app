@@ -35,7 +35,7 @@ import { ANALYTICS_EVENT, logAnalyticsEvent } from '@/src/services/analytics';
 type EmploymentPayload = { employmentMode: EmploymentType; details: EmploymentDetails };
 
 // Generate options for salary day dropdown (1-31)
-const salaryDayOptions = Array.from({ length: 31 }, (_, i) => ({
+export const salaryDayOptions = Array.from({ length: 31 }, (_, i) => ({
   label: String(i + 1),
   value: i + 1,
 }));
@@ -49,7 +49,7 @@ type EmploymentFormConfig = {
 };
 
 /** Minimal details for direct API call when no form is shown (self_employed / unemployed). */
-const MINIMAL_DETAILS_BY_MODE: Record<'self_employed' | 'unemployed', EmploymentDetails> = {
+ export const MINIMAL_DETAILS_BY_MODE: Record<'self_employed' | 'unemployed', EmploymentDetails> = {
   self_employed: {
     businessName: '',
     designation: '',
@@ -63,7 +63,7 @@ const MINIMAL_DETAILS_BY_MODE: Record<'self_employed' | 'unemployed', Employment
   },
 };
 
-const FORM_CONFIG_BY_MODE: Record<EmploymentType, EmploymentFormConfig> = {
+export const FORM_CONFIG_BY_MODE: Record<EmploymentType, EmploymentFormConfig> = {
   salaried: {
     placeholder: 'Enter your company name',
     submitLabel: 'Next →',
@@ -150,7 +150,7 @@ const EmploymentDetailsFooter = ({
  * After employment details are submitted, check eligibility if needed,
  * then sync with backend stage to determine next navigation.
  */
-async function handlePostSubmitSuccess({
+export async function handlePostSubmitSuccess({
   onNext,
   setErrorMessage,
   syncFromUserStage,

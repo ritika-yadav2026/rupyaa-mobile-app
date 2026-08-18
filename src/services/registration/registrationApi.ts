@@ -11,6 +11,7 @@ import type {
   EmploymentDetails,
   GetPersonalDetailsResponse,
   GetEmploymentDetailsResponse,
+  PersonalDetailsEmploymentFormDefaults,
 } from '@/src/types/registration';
 import type {
   PostContactDetailsRequest,
@@ -110,6 +111,75 @@ export function mapEmploymentDetailsToApi(
  * - dob is returned as yyyy-mm-dd, needs dd/mm/yyyy for the form.
  * - salary is returned as number, needs string for the form.
  */
+/**
+ * Map employment fields from GET /user/personal-details into persisted details shape.
+ */
+export function mapEmploymentDetailsFromPersonalDetailsApi(
+  data: GetPersonalDetailsResponse
+): { employmentMode: EmploymentType; details: EmploymentDetails } | null {
+  const employmentMode = parseEmploymentTypeFromApi(data.employmentMode);
+  if (!employmentMode) {
+    return null;
+  }
+  const organization = (data.organization ?? '').trim();
+  const designation = (data.designation ?? '').trim();
+  const declaredSalaryDay = normalizeSalaryDay(data.declaredSalaryDay);
+  if (employmentMode === 'salaried') {
+    return {
+      employmentMode,
+      details: {
+        companyName: organization,
+        designation,
+        netMonthlyIncome: '',
+        declaredSalaryDay,
+      },
+    };
+  }
+  if (employmentMode === 'self_employed') {
+    return {
+      employmentMode,
+      details: {
+        businessName: organization,
+        designation,
+        netMonthlyIncome: '',
+        declaredSalaryDay,
+      },
+    };
+  }
+  return {
+    employmentMode,
+    details: {
+      currentActivity: designation,
+      netMonthlyIncome: '',
+      declaredSalaryDay,
+    },
+  };
+}
+
+/**
+ * Map employment fields from GET /user/personal-details into merged-form defaults.
+ */
+export function mapEmploymentDefaultsFromPersonalDetailsApi(
+  data: GetPersonalDetailsResponse
+): PersonalDetailsEmploymentFormDefaults {
+  const mapped = mapEmploymentDetailsFromPersonalDetailsApi(data);
+  if (!mapped) {
+    return {};
+  }
+  const { employmentMode, details } = mapped;
+  const defaults: PersonalDetailsEmploymentFormDefaults = {
+    employmentMode,
+    declaredSalaryDay: details.declaredSalaryDay,
+  };
+  if (employmentMode === 'salaried' && 'companyName' in details && details.companyName) {
+    defaults.primaryField = details.companyName;
+  }
+  if (employmentMode === 'self_employed' && 'businessName' in details && details.businessName) {
+    defaults.primaryField = details.businessName;
+  }
+  return defaults;
+}
+
 export function mapPersonalDetailsFromApi(
   data: GetPersonalDetailsResponse
 ): PersonalDetails {
@@ -613,6 +683,17 @@ function convertDobFromApiFormat(dob: string): string {
     d.getUTCFullYear(),
   ].join("/");
   return result ?? '';
+}
+
+function normalizeSalaryDay(value?: number): number {
+  if (value == null || !Number.isFinite(value)) {
+    return 1;
+  }
+  const day = Math.trunc(value);
+  if (day < 1 || day > 31) {
+    return 1;
+  }
+  return day;
 }
 
 function parseEmploymentTypeFromApi(value?: string): EmploymentType | null {
