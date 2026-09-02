@@ -246,17 +246,6 @@ export function LoanWizard() {
     return null;
   }
 
-  if (isUnderReview) {
-    return (
-      <View style={styles.root}>
-        <UnderReviewModal
-          visible
-          onCtaPress={handleUnderReviewGoHome}
-        />
-      </View>
-    );
-  }
-
   return (
     <View style={styles.root}>
       {/* Static header — lives OUTSIDE the slide animation so it never
@@ -265,13 +254,15 @@ export function LoanWizard() {
       <SafeAreaView edges={['top']} style={styles.wizardHeader}>
         <View style={styles.wizardHeaderContent}>
           <AuthHeader />
-          {appConfig.useProgressStepperV2 ? (
-            <ProgressStepperV2
-              {...stepperProps}
-              accentColor={colors.primary.main}
-            />
-          ) : (
-            <ProgressStepper {...stepperProps} />
+          {!isUnderReview && (
+            appConfig.useProgressStepperV2 ? (
+              <ProgressStepperV2
+                {...stepperProps}
+                accentColor={colors.primary.main}
+              />
+            ) : (
+              <ProgressStepper {...stepperProps} />
+            )
           )}
         </View>
       </SafeAreaView>
@@ -306,6 +297,12 @@ export function LoanWizard() {
         onCheckOffers={handleOfferStatusCheckOffers}
         onBackToHome={handleOfferStatusBackToHome}
         isCheckingOffers={isResolvingOfferStatusStage}
+      />
+      {/* Shown when backend stage is APPLICATION_STATUS (application submitted, pending review).
+          The shared header remains visible while its progress stepper is hidden above. */}
+      <UnderReviewModal
+        visible={isUnderReview}
+        onCtaPress={handleUnderReviewGoHome}
       />
       <PreEnachReviewGateModal
         visible={preEnachReviewGate.visible}

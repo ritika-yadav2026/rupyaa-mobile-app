@@ -68,7 +68,6 @@ function OfferDetailsCard({ offer, loanType }: { offer: CurrentOfferOffer; loanT
       <AppText style={detailStyles.cardTitle} variant="caption" color='textprimary' weight="semiBold">
         Loan Details
       </AppText>
-      <View style={detailStyles.titleDivider} />
       <OfferDetailRow label="Loan Amount" value={formatCurrency(offer?.offerAmount ?? 0, true)} />
       <OfferDetailRow label="Repayment Period" value={`${offer.loanId?.tenure ?? 0} days`} />
       <OfferDetailRow label="Interest Rate" value={`${offer.interestRate}% ${rateSuffix}`} />
@@ -298,11 +297,6 @@ const detailStyles = StyleSheet.create({
   cardTitle: {
     color: colors.text.primary,
     marginBottom: spacing.sm,
-  },
-  titleDivider: {
-    height: 1,
-    backgroundColor: colors.border.light,
-    marginBottom: spacing.xs,
   },
   row: {
     flexDirection: 'row',

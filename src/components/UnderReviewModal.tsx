@@ -99,7 +99,7 @@ export function UnderReviewModal({
         { paddingTop: insets.top, opacity: fadeAnim },
       ]}
     >
-      <LinearGradient
+      {/* <LinearGradient
         pointerEvents="none"
         colors={[
           colors.primary.main,
@@ -108,10 +108,10 @@ export function UnderReviewModal({
         ]}
         locations={[0, 0.16, 0.32]}
         style={StyleSheet.absoluteFill}
-      />
-      <View style={styles.header}>
+      /> */}
+      {/* <View style={styles.header}>
         <RupyaaLogo size="sm" />
-      </View>
+      </View> */}
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -217,7 +217,6 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
-    marginTop: spacing.lg,
   },
   body: {
     alignItems: 'center',
