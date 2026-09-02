@@ -229,7 +229,13 @@ export function OfferStatusModal({
       >
         {isVerified ? (
           <>
-            <AppText style={styles.verifiedFooterHint} variant="captionExtraSmall">
+            <AppText
+              style={styles.verifiedFooterHint}
+              variant="captionExtraSmall"
+              onPress={onBackToHome}
+              accessibilityRole="link"
+              accessibilityLabel="Continue to Homepage"
+            >
               Continue to Homepage
             </AppText>
             <Button

@@ -202,8 +202,8 @@ export function LoanWizard() {
 
   const handleOfferStatusBackToHome = useCallback(() => {
     setShowOfferStatusModal(false);
-    handleGoHome();
-  }, [handleGoHome, setShowOfferStatusModal]);
+    router.replace(HOME_ROUTE);
+  }, [router, setShowOfferStatusModal]);
 
   const handleNext = useCallback(() => {
     const { phaseIndex: currentPhaseIndex, substepIndex: currentSubstepIdx } = useFlowStore.getState();
@@ -241,8 +241,20 @@ export function LoanWizard() {
   consoleLogDev('journeyStoppedReason', journeyStoppedReason);
 
   const hasSyncError = stageSyncStatus === 'error';
+  const isUnderReview = userStage === UserStagesInBackend.APPLICATION_STATUS;
   if (!StepComponent) {
     return null;
+  }
+
+  if (isUnderReview) {
+    return (
+      <View style={styles.root}>
+        <UnderReviewModal
+          visible
+          onCtaPress={handleUnderReviewGoHome}
+        />
+      </View>
+    );
   }
 
   return (
@@ -294,13 +306,6 @@ export function LoanWizard() {
         onCheckOffers={handleOfferStatusCheckOffers}
         onBackToHome={handleOfferStatusBackToHome}
         isCheckingOffers={isResolvingOfferStatusStage}
-      />
-      {/* Shown when backend stage is APPLICATION_STATUS (application submitted, pending review).
-          Checked directly from userStage so removing APPLICATION_STATUS from userStages.ts
-          automatically removes this overlay with no other changes needed. */}
-      <UnderReviewModal
-        visible={userStage === UserStagesInBackend.APPLICATION_STATUS}
-        onCtaPress={handleUnderReviewGoHome}
       />
       <PreEnachReviewGateModal
         visible={preEnachReviewGate.visible}

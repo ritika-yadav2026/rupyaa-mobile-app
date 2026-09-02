@@ -217,6 +217,7 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
+    marginTop: spacing.lg,
   },
   body: {
     alignItems: 'center',

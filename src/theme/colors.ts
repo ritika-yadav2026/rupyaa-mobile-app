@@ -32,6 +32,7 @@ export const colors = {
     primary: '#FFFFFF',
     secondary: '#F8F9FA',
     tertiary: '#F0F2F5',
+    cream: '#FFFCF4',
     dark: '#1A1A1A',
   },
   text: {

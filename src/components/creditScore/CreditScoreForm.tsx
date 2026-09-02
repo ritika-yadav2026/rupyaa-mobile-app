@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useRouter } from 'expo-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AppText, Button, ControlledDateInput, ControlledInput, FormLayout, PhoneInput, RupyaaLogo } from '@/src/components';
+import { AppText, Button, ControlledDateInput, ControlledInput, FormLayout, PhoneInput, RupyaaLogo, ScreenBackground } from '@/src/components';
 import ErrorContainer from '@/src/components/ErrorContainer';
 import { CreditReportLoading, CreditScoreReport, CreditScoreUnavailable } from '@/src/components/creditScore';
 import { colors, spacing } from '@/src/theme';
@@ -81,8 +81,8 @@ export function CreditScoreForm() {
   if (pull.isPending && lastPayload.current) return <CreditReportLoading />;
   if (!existing.isFetched && existing.fetchStatus !== 'paused') return <CreditReportLoading />;
 
-  return <View style={styles.screen}><FormLayout ref={scrollRef} keyboardAwareFooter safeAreaEdges={['bottom']}
-    header={<><RupyaaLogo size="md" style={styles.logo} /><View style={styles.heading}><AppText variant="h3" weight="semiBold" color="black">Check your credit score</AppText><AppText color="black" style={styles.subtitle}>Free & won’t affect your score. We just need a few details to fetch your Equifax report.</AppText></View></>}
+  return <ScreenBackground><FormLayout ref={scrollRef} keyboardAwareFooter
+    header={<><RupyaaLogo size="sm" style={styles.logo} /><View style={styles.heading}><AppText variant="h3" weight="semiBold" color="black">Check your credit score</AppText><AppText color="black" style={styles.subtitle}>Free & won’t affect your score. We just need a few details to fetch your Equifax report.</AppText></View></>}
     footer={<><ErrorContainer responseError={submitError || pull.error?.message || ''} /><Button fullWidth size="large" loading={pull.isPending} disabled={pull.isPending || !isValid} onPress={handleSubmit(onSubmit, onValidationError)}>Get my credit score</Button></>}>
     <View style={styles.form}>
       <ControlledInput control={control} name="fullName" label="Full Name" placeholder="As per PAN Card" required inputRef={fullNameRef} returnKeyType="next" onSubmitEditing={() => panRef.current?.focus()} />
@@ -92,12 +92,11 @@ export function CreditScoreForm() {
       <ControlledInput control={control} name="email" label="Email Address" placeholder="name@email.com" required keyboardType="email-address" autoCapitalize="none" inputRef={emailRef} returnKeyType="next" onSubmitEditing={() => incomeRef.current?.focus()} />
       <ControlledInput control={control} name="monthlyIncome" label="Monthly Income" placeholder="00,000" required keyboardType="number-pad" leftAccessory={<AppText color="black">₹</AppText>} inputRef={incomeRef} />
     </View>
-  </FormLayout></View>;
+  </FormLayout></ScreenBackground>;
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background.primary },
-  logo: { marginTop: spacing.xl, marginLeft: spacing.md, marginBottom: spacing['3xl'] },
+  logo: { marginTop: spacing['4xl'], marginLeft: spacing.md, marginBottom: spacing.xl },
   heading: { gap: spacing.sm, paddingHorizontal: spacing.md, paddingBottom: spacing.xl },
   subtitle: { lineHeight: 24, color: colors.text.black },
   form: { gap: spacing.md, paddingHorizontal: spacing.md, paddingBottom: spacing.xl },
