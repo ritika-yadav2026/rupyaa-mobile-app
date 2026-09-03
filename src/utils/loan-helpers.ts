@@ -2,7 +2,17 @@
  * Loan routing and date helpers for active loan dashboard flow.
  */
 
-import type { BureauPolicyAnalyticsPayload, Loan } from '@/src/types/loans';
+import type {
+  BureauPolicyAnalyticsPayload,
+  EmiRepaymentScheduleItem,
+  EmiBlockLockState,
+  EmiBlockStatus,
+  EmiPaymentDecision,
+  EmiRepaymentState,
+  GetExistingActiveLoanResponse,
+  Loan,
+} from '@/src/types/loans';
+import { EMI_BLOCK_STATUS } from '@/src/types/loans';
 import type { ApiResponse } from '@/src/types/api';
 import type { CurrentOfferResponse, OfferLoanStatus } from '@/src/types/offer';
 import type { UserEligibilityExperianResponse } from '@/src/types/user';
@@ -171,7 +181,70 @@ export function isDueDateInFuture(dueDate: string): boolean {
   return date.getTime() > today.getTime();
 }
 
-export type ActiveLoanScreenType = 'foreclosure' | 'payment';
+export type ActiveLoanScreenType = 'foreclosure' | 'payment' | 'payment-emi';
+
+export function isEmiLoanTypeValue(value: unknown): boolean {
+  return typeof value === 'string' && value.trim().toUpperCase() === 'EMI';
+}
+
+export function isEmiLoan(loan: Loan | null | undefined): boolean {
+  return isEmiLoanTypeValue(loan?.type);
+}
+
+/**
+ * Selects the EMI loan used by the active-loan dashboard card.
+ * The response-level loanType is authoritative for choosing the dashboard UI.
+ */
+export function resolveActiveDashboardEmiLoan(
+  activeLoanData: GetExistingActiveLoanResponse | null | undefined,
+  isActiveLoanDashboard: boolean
+): Loan | null {
+  if (!isActiveLoanDashboard) return null;
+  if (!isEmiLoanTypeValue(activeLoanData?.loanType)) return null;
+  return activeLoanData?.loan ?? null;
+}
+
+function parsePositiveNumber(value: unknown): number | undefined {
+  if (typeof value === 'number' && Number.isFinite(value) && value > 0) return value;
+  return undefined;
+}
+
+function getEmiRepaymentSummary(loan: Loan | null) {
+  return loan?.emiRepayment?.summary ?? null;
+}
+
+export function getEmiTotalEmis(loan: Loan | null): number {
+  const summaryTotal = parsePositiveNumber(getEmiRepaymentSummary(loan)?.totalEmis);
+  return summaryTotal ?? 0;
+}
+
+export function getEmiMonthlyAmount(loan: Loan | null): number {
+  const summaryMonthlyEmi = parsePositiveNumber(getEmiRepaymentSummary(loan)?.monthlyEmi);
+  if (summaryMonthlyEmi != null) return summaryMonthlyEmi;
+
+  return summaryMonthlyEmi ?? 0;
+}
+
+export function getEmiTotalPayable(loan: Loan | null): number {
+  const summaryTotalPayable = parsePositiveNumber(getEmiRepaymentSummary(loan)?.totalPayable);
+  return summaryTotalPayable ?? 0;
+}
+
+export function getEmiTotalPaid(loan: Loan | null): number {
+  const summaryTotalPaid = getEmiRepaymentSummary(loan)?.totalPaid;
+  if (typeof summaryTotalPaid === 'number' && Number.isFinite(summaryTotalPaid)) {
+    return Math.max(0, summaryTotalPaid);
+  }
+  return 0;
+}
+
+export function getEmiRemainingAmount(loan: Loan | null): number {
+  const summaryRemaining = getEmiRepaymentSummary(loan)?.remaining;
+  if (typeof summaryRemaining === 'number' && Number.isFinite(summaryRemaining)) {
+    return Math.max(0, summaryRemaining);
+  }
+  return 0;
+}
 
 /**
  * Resolves which screen to show for an active DISBURSED loan.
@@ -183,7 +256,234 @@ export function resolveActiveLoanScreenType(
   loan: Loan | null
 ): ActiveLoanScreenType | null {
   if (!loan) return null;
+  if (isEmiLoan(loan)) return 'payment-emi';
   return isDueDateInFuture(loan.dueDate) ? 'foreclosure' : 'payment';
+}
+
+export function normalizeEmiStatus(status: string | undefined): EmiBlockStatus | '' {
+  const normalizedStatus = status?.trim().toUpperCase();
+  if (normalizedStatus === EMI_BLOCK_STATUS.paid) return EMI_BLOCK_STATUS.paid;
+  if (normalizedStatus === EMI_BLOCK_STATUS.due) return EMI_BLOCK_STATUS.due;
+  if (normalizedStatus === EMI_BLOCK_STATUS.overdue) return EMI_BLOCK_STATUS.overdue;
+  if (normalizedStatus === EMI_BLOCK_STATUS.upcoming) return EMI_BLOCK_STATUS.upcoming;
+  return '';
+}
+
+const EMI_PAYMENT_LOG_TAG = '[EMI_PAYMENT_DECISION]';
+
+export function getSortedEmiSchedule(loan: Loan | null): EmiRepaymentScheduleItem[] {
+  return [...(loan?.emiRepayment?.schedule ?? [])].sort((a, b) => a.index - b.index);
+}
+
+export function getPaidEmiCount(loan: Loan | null): number {
+  const summaryPaid = getEmiRepaymentSummary(loan)?.emisPaid;
+  if (typeof summaryPaid === 'number' && Number.isFinite(summaryPaid)) {
+    return Math.max(0, Math.floor(summaryPaid));
+  }
+  return 0;
+}
+
+export function getNextDueEmiBlock(loan: Loan | null): EmiRepaymentScheduleItem | null {
+  const blocks = getSortedEmiSchedule(loan);
+  const activeIndex = loan?.emiRepayment?.activeEmiIndex;
+  const activeBlock = blocks.find((block) => block.index === activeIndex);
+  if (activeBlock != null && normalizeEmiStatus(activeBlock.status) !== EMI_BLOCK_STATUS.paid) {
+    return activeBlock;
+  }
+  const summaryNextDueDate = getEmiRepaymentSummary(loan)?.nextDueDate;
+  if (typeof summaryNextDueDate === 'string' && summaryNextDueDate.length > 0) {
+    const summaryBlock = blocks.find((block) => block.dueDate === summaryNextDueDate);
+    if (summaryBlock != null && normalizeEmiStatus(summaryBlock.status) !== EMI_BLOCK_STATUS.paid) {
+      return summaryBlock;
+    }
+  }
+  return (
+    blocks.find((block) => {
+      const status = normalizeEmiStatus(block.status);
+      return status === EMI_BLOCK_STATUS.due || status === EMI_BLOCK_STATUS.overdue;
+    }) ??
+    blocks.find((block) => normalizeEmiStatus(block.status) !== EMI_BLOCK_STATUS.paid) ??
+    null
+  );
+}
+
+export function getPayableEmiBlocks(loan: Loan | null): EmiRepaymentScheduleItem[] {
+  const blocks = getSortedEmiSchedule(loan);
+  return blocks.filter((block) => {
+    const status = normalizeEmiStatus(block.status);
+    return status === EMI_BLOCK_STATUS.overdue || status === EMI_BLOCK_STATUS.due;
+  });
+}
+
+export function getEmiBlockPayableAmount(block: EmiRepaymentScheduleItem | null | undefined): number {
+  if (block == null) return 0;
+  if (typeof block.payableTotal === 'number' && Number.isFinite(block.payableTotal)) {
+    return Math.max(0, block.payableTotal);
+  }
+  const penalCharge = block.penalCharge ?? 0;
+  const gstOnPenal = block.gstOnPenal ?? 0;
+  const bounceCharge = block.bounceCharge ?? 0;
+  const gstOnBounce = block.gstOnBounce ?? 0;
+  return block.emiAmount + penalCharge + gstOnPenal + bounceCharge + gstOnBounce;
+}
+
+export function getEmiPaymentAmount(loan: Loan | null): number {
+  const payEmiTotal = loan?.emiRepayment?.payEmi?.total;
+  return typeof payEmiTotal === 'number' && Number.isFinite(payEmiTotal)
+    ? Math.max(0, payEmiTotal)
+    : 0;
+}
+
+export function getEmiAllDueAmount(loan: Loan | null): number {
+  const payAllDueTotal = loan?.emiRepayment?.payAllDue?.total;
+  return typeof payAllDueTotal === 'number' && Number.isFinite(payAllDueTotal)
+    ? Math.max(0, payAllDueTotal)
+    : 0;
+}
+
+function isForeclosedEmiLoan(loan: Loan | null): boolean {
+  if (!loan) return false;
+  const status = typeof loan.status === 'string' ? loan.status.trim().toUpperCase() : '';
+  return loan.emiRepayment?.isClosed === true || loan.isForeclosed === true || status === 'FORECLOSED';
+}
+
+function getFirstPayableEmiBlock(loan: Loan | null): EmiRepaymentScheduleItem | null {
+  const payableBlocks = getPayableEmiBlocks(loan);
+  if (payableBlocks.length > 0) return payableBlocks[0];
+  return getNextDueEmiBlock(loan);
+}
+
+export function getEmiRepaymentState(loan: Loan | null): EmiRepaymentState {
+  const blocks = getSortedEmiSchedule(loan);
+  if (blocks.length === 0) return 'no_schedule';
+  if (isForeclosedEmiLoan(loan)) return 'foreclosed';
+
+  const paidCount = getPaidEmiCount(loan);
+  const overdueBlocks = blocks.filter(
+    (block) => normalizeEmiStatus(block.status) === EMI_BLOCK_STATUS.overdue
+  );
+  const dueBlocks = blocks.filter(
+    (block) => normalizeEmiStatus(block.status) === EMI_BLOCK_STATUS.due
+  );
+  const hasOnlyPaidBlocks = blocks.every(
+    (block) => normalizeEmiStatus(block.status) === EMI_BLOCK_STATUS.paid
+  );
+  if (hasOnlyPaidBlocks) return 'all_paid';
+  if (overdueBlocks.length > 0 && dueBlocks.length > 0) return 'overdue_and_due';
+  if (overdueBlocks.length > 1) return 'multiple_overdue';
+
+  const actionBlock = getFirstPayableEmiBlock(loan);
+  const actionStatus = normalizeEmiStatus(actionBlock?.status);
+
+  // This branch separates "first month" cases from later-cycle cases for clearer copy/actions.
+  if (paidCount === 0 && actionBlock?.index === 0 && actionStatus === EMI_BLOCK_STATUS.due) {
+    return 'first_emi_due';
+  }
+  if (paidCount === 0 && actionBlock?.index === 0 && actionStatus === EMI_BLOCK_STATUS.overdue) {
+    return 'first_emi_overdue';
+  }
+
+  if (paidCount > 0 && actionStatus === EMI_BLOCK_STATUS.due) return 'some_paid_next_due';
+  if (paidCount > 0 && actionStatus === EMI_BLOCK_STATUS.overdue) return 'some_paid_next_overdue';
+
+  const hasPayableBlocks = overdueBlocks.length > 0 || dueBlocks.length > 0;
+  if (!hasPayableBlocks) return 'no_due_yet';
+
+  return 'unknown';
+}
+
+function getEmiBlockListLabel(blocks: EmiRepaymentScheduleItem[]): string {
+  return blocks.map((block) => `EMI ${block.index + 1}`).join(' + ');
+}
+
+function getEmiDecisionSubtitle(
+  state: EmiRepaymentState,
+  payableBlocks: EmiRepaymentScheduleItem[],
+  block: EmiRepaymentScheduleItem | null
+): string {
+  if (state === 'all_paid') return 'Your EMI schedule is completed';
+  if (state === 'foreclosed') return 'This loan is already closed';
+  if (state === 'no_due_yet' && block != null) {
+    return `Next EMI unlocks on ${formatLoanDueDate(block.dueDate)}`;
+  }
+
+  // Payable blocks are the source of truth for the option chip copy.
+  // This keeps single and combined payments consistent: EMI 1, EMI 1 + EMI 2, etc.
+  if (payableBlocks.length > 0) {
+    return `Pay all dues ${getEmiBlockListLabel(payableBlocks)}`;
+  }
+
+  return 'Pay your current due EMI';
+}
+
+export function getEmiPaymentDecision(loan: Loan | null): EmiPaymentDecision {
+  const state = getEmiRepaymentState(loan);
+  const payableBlocks = getPayableEmiBlocks(loan);
+  const nextActionBlock = getFirstPayableEmiBlock(loan);
+  const amount = getEmiPaymentAmount(loan);
+  const allDueAmount = getEmiAllDueAmount(loan);
+  const disabled = amount <= 0 || state === 'all_paid' || state === 'foreclosed';
+  const allDueDisabled =
+    payableBlocks.length < 2 ||
+    allDueAmount <= 0 ||
+    state === 'all_paid' ||
+    state === 'foreclosed';
+
+  const decision: EmiPaymentDecision = {
+    state,
+    amount,
+    allDueAmount,
+    title: 'Pay All Dues',
+    subtitle: getEmiDecisionSubtitle(state, payableBlocks, nextActionBlock),
+    footerLabel: nextActionBlock != null ? `EMI ${nextActionBlock.index + 1}` : 'Pay EMI',
+    disabled,
+    allDueDisabled,
+    payableBlocks,
+    nextActionBlock,
+  };
+
+  consoleLogDev(EMI_PAYMENT_LOG_TAG, {
+    loanId: loan?._id,
+    activeEmiIndex: loan?.emiRepayment?.activeEmiIndex,
+    state: decision.state,
+    payableAmount: decision.amount,
+    allDueAmount: decision.allDueAmount,
+    payableIndexes: decision.payableBlocks.map((block) => block.index),
+    schedule: getSortedEmiSchedule(loan).map((block) => ({
+      index: block.index,
+      status: normalizeEmiStatus(block.status),
+      dueDate: block.dueDate,
+    })),
+  });
+
+  return decision;
+}
+
+export function isEmiBlockLocked(loan: Loan | null, block: EmiRepaymentScheduleItem): boolean {
+  if (normalizeEmiStatus(block.status) === EMI_BLOCK_STATUS.paid) return false;
+  if (typeof block.isLocked === 'boolean') return block.isLocked;
+  const isPayable = getPayableEmiBlocks(loan).some(
+    (payableBlock) => payableBlock.index === block.index
+  );
+  if (isPayable) return false;
+  const nextDueBlock = getNextDueEmiBlock(loan);
+  return nextDueBlock == null || block.index > nextDueBlock.index;
+}
+
+const EMI_BLOCK_LOCKED_MESSAGE = 'Unlocks once earlier EMIs are paid';
+
+/** Resolves the complete EMI lock presentation state from the repayment sequence. */
+export function getEmiBlockLockState(
+  loan: Loan | null,
+  block: EmiRepaymentScheduleItem
+): EmiBlockLockState {
+  const locked = isEmiBlockLocked(loan, block);
+  if (!locked) return { locked };
+
+  return {
+    locked,
+    lockedMessage: EMI_BLOCK_LOCKED_MESSAGE,
+  };
 }
 
 /**
@@ -226,10 +526,14 @@ export function resolveCardDisplayAmount(
 
 /**
  * Amount due for display in Active Loan card.
- * Priority: amountDue (API field, live soon) → emiAmount → totalPayable.
+ * EMI priority: emiRepayment pay-all-due total → remaining.
+ * Payday priority: amountDue → emiAmount → totalPayable.
  */
 export function getAmountDue(loan: Loan | null): number {
   if (!loan) return 0;
+  if (isEmiLoan(loan)) {
+    return getEmiPaymentAmount(loan) || getEmiRemainingAmount(loan);
+  }
   if (typeof loan.amountDue === 'number' && Number.isFinite(loan.amountDue) && loan.amountDue > 0) {
     return loan.amountDue;
   }
@@ -248,6 +552,9 @@ export function getAmountDue(loan: Loan | null): number {
  */
 export function resolvePaymentTotalPayable(loan: Loan | null): number {
   if (!loan) return 0;
+  if (isEmiLoan(loan)) {
+    return getEmiPaymentAmount(loan);
+  }
   if (typeof loan.amountDue === 'number' && Number.isFinite(loan.amountDue) && loan.amountDue > 0) {
     return loan.amountDue;
   }
@@ -259,13 +566,20 @@ export function resolvePaymentTotalPayable(loan: Loan | null): number {
 /**
  * Resolves the total payable amount shown on the Foreclosure screen.
  *
- * Current rule: always use `loan.amountDue` — the authoritative "pay to close" figure from the API.
+ * EMI priority: emiRepayment.foreclosure.total.
+ * Payday priority: amountDue.
  *
  * Future: when tenure ends, a different penalty/post-due amount may apply.
  * Update only this function when that logic changes — callers stay untouched.
  */
 export function resolveForeclosureTotalPayable(loan: Loan | null): number {
   if (!loan) return 0;
+  if (isEmiLoan(loan)) {
+    const foreclosureTotal = loan.emiRepayment?.foreclosure?.total;
+    return typeof foreclosureTotal === 'number' && Number.isFinite(foreclosureTotal)
+      ? Math.max(0, foreclosureTotal)
+      : 0;
+  }
   if (typeof loan.amountDue === 'number' && Number.isFinite(loan.amountDue) && loan.amountDue > 0) {
     return loan.amountDue;
   }
@@ -298,6 +612,17 @@ export function buildActiveLoanCardContent(loan: Loan | null): {
     };
   }
   const screenType = resolveActiveLoanScreenType(loan);
+  if (screenType === 'payment-emi') {
+    const nextDueBlock = getNextDueEmiBlock(loan);
+    const amount = getEmiPaymentAmount(loan) || getEmiMonthlyAmount(loan);
+    const dueDateStr = nextDueBlock ? formatLoanDueDate(nextDueBlock.dueDate) : '';
+    return {
+      heading: `${formatCurrency(amount)} EMI Payment Due`,
+      description: dueDateStr
+        ? `Next EMI repayment is due on ${dueDateStr}.`
+        : 'Please pay your active EMI on time to avoid late fees.',
+    };
+  }
   if (screenType === 'foreclosure') {
     const disbursedAt = loan.disbursedAt ?? loan.actualDisbursedAt ?? '';
     const disbursedLabel =
