@@ -9,4 +9,5 @@ export * from './ota-updates';
 export * from './progressStepperUtils';
 export * from './loan-formatters';
 export * from './loan-helpers';
+export * from './offer-helpers';
 export * from './crypto';

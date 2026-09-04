@@ -56,8 +56,11 @@ export interface Notification {
 export interface OnboardingSlide {
   id: string;
   title: string;
+  /** Substring of title to render in primary green color */
+  titleHighlight?: string;
+  subtitle: string;
   description?: string;
-  image?: string;
+  image?: any;
 }
 
 export type {
@@ -85,6 +88,17 @@ export type {
   CurrentOfferNoOfferResponse,
   CurrentOfferOffer,
   CurrentOfferLoanId,
+  CurrentEmiOffer,
+  CurrentEmiOfferRepaymentPlanItem,
+  EmiRepaymentItem,
+  EmiApprovedOfferContentProps,
+  EmiSummaryCardProps,
+  EmiRepaymentCardProps,
+  OfferTypeContentProps,
+  ApprovedOfferBodyProps,
+  PayDayApprovedOfferContentProps,
+  OfferDetailRowProps,
+  OfferAmountHeaderProps,
 } from './offer';
 export { isCurrentOfferSuccess } from './offer';
 
@@ -128,12 +142,38 @@ export type {
 
 export type {
   Loan,
+  EmiBlock,
+  EmiBlockStatus,
+  EmiRepayment,
+  EmiRepaymentSummary,
+  EmiRepaymentScheduleItem,
+  EmiRepaymentPaymentTotal,
+  EmiRepaymentPayAllDue,
+  EmiForeclosureBreakdown,
+  EmiPaymentContentProps,
+  EmiPaymentContentState,
+  EmiPaymentDecision,
+  EmiProgressHeaderProps,
+  EmiRepaymentAccordionBreakdownRow,
+  EmiRepaymentAccordionStatusVariant,
+  EmiRepaymentAccordionItem,
+  EmiRepaymentAccordionProps,
+  EmiRepaymentAccordionCardProps,
+  EmiPaymentOptionCardProps,
+  ActiveEmiTileState,
+  ActiveEmiTile,
+  ActiveEmiCardProps,
+  ActiveEmiTileProps,
+  ActiveLoanContentProps,
+  ActiveLoanCardProps,
   GetAllUserLoansResponse,
   GetExistingActiveLoanResponse,
   LoanStatus,
   PaymentStatus,
   LoanType,
+  EmiRepaymentState,
 } from './loans';
+export { EMI_BLOCK_STATUS } from './loans';
 
 export type {
   PaymentOrderStatus,

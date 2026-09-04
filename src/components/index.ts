@@ -82,7 +82,6 @@ export {
 } from './IneligibilityModal';
 export {
   UnderReviewModal,
-  type UnderReviewModalProps,
 } from './UnderReviewModal';
 export {
   OfferStatusModal,
