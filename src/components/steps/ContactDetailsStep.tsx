@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
@@ -78,7 +77,6 @@ const submitContactDetails = createRegistrationSubmit<
 });
 
 export function ContactDetailsStep({ onNext, onPrev }: StepProps) {
-  const { t } = useTranslation();
   const phaseIndex = useFlowStore((s) => s.phaseIndex);
   const substepIndex = useFlowStore((s) => s.substepIndex);
   const safePhaseIndex = Math.max(0, Math.min(phaseIndex, FLOW_PHASES.length - 1));
@@ -103,6 +101,7 @@ export function ContactDetailsStep({ onNext, onPrev }: StepProps) {
   const [officeEmailVerified, setOfficeEmailVerified] = useState(false);
   const [otpModalVisible, setOtpModalVisible] = useState(false);
   const [verifyTarget, setVerifyTarget] = useState<VerifyTarget | null>(null);
+  const [otpRecipient, setOtpRecipient] = useState('');
   const [otp, setOtp] = useState('');
   const [otpError, setOtpError] = useState('');
   const [verifySendError, setVerifySendError] = useState('');
@@ -250,6 +249,7 @@ export function ContactDetailsStep({ onNext, onPrev }: StepProps) {
   const handleOtpModalClose = useCallback(() => {
     setOtpModalVisible(false);
     setVerifyTarget(null);
+    setOtpRecipient('');
     setOtp('');
     setOtpError('');
   }, []);
@@ -324,6 +324,7 @@ export function ContactDetailsStep({ onNext, onPrev }: StepProps) {
       if (!email) return;
       setVerifySendError('');
       setVerifyTarget(target);
+      setOtpRecipient(email);
       sendOtpMutation.mutate({
         email,
         isPersonalMail: target === 'personal',
@@ -366,7 +367,7 @@ export function ContactDetailsStep({ onNext, onPrev }: StepProps) {
             style={[
               styles.verifyLinkText,
               isVerified && styles.verifiedText,
-              disabled && styles.verifyLinkTextDisabled,
+              disabled && !isVerified && styles.verifyLinkTextDisabled,
             ]}
             variant="caption"
             weight="medium"
@@ -406,7 +407,7 @@ export function ContactDetailsStep({ onNext, onPrev }: StepProps) {
       setOtpError('Please enter OTP.');
       return;
     }
-    const email = verifyTarget === 'personal' ? emailValue?.trim() : officeEmailValue?.trim();
+    const email = otpRecipient;
     if (!email) {
       setOtpError('Email is required');
       return;
@@ -417,7 +418,7 @@ export function ContactDetailsStep({ onNext, onPrev }: StepProps) {
       otp: otp.trim(),
       isPersonalMail: verifyTarget === 'personal',
     });
-  }, [otp, verifyTarget, emailValue, officeEmailValue, verifyOtpMutation]);
+  }, [otp, verifyTarget, otpRecipient, verifyOtpMutation]);
 
   const handleOtpChange = useCallback((value: string) => {
     setOtpError('');
@@ -430,18 +431,6 @@ export function ContactDetailsStep({ onNext, onPrev }: StepProps) {
     const transformed = contactDetailsSchema.parse(data) as ContactDetails;
     submit(transformed);
   };
-
-  const getOtpModalSentTo = useCallback(() => {
-    if (verifyTarget === 'personal') {
-      return t('Enter OTP sent to {{email}}', { email: emailValue?.trim() || t('your email') });
-    }
-    if (verifyTarget === 'office') {
-      return t('Enter OTP sent to {{email}}', { email: officeEmailValue?.trim() || t('your office email') });
-    }
-    return '';
-  }, [verifyTarget, emailValue, officeEmailValue, t]);
-
-  const otpModalSentTo = getOtpModalSentTo();
 
   return (
     <>
@@ -525,7 +514,7 @@ export function ContactDetailsStep({ onNext, onPrev }: StepProps) {
         </View>
         <VerifyOtpModal
           visible={otpModalVisible}
-          sentTo={otpModalSentTo}
+          sentTo={otpRecipient}
           otpValue={otp}
           onOtpChange={handleOtpChange}
           onResend={handleOtpModalResend}
@@ -563,7 +552,7 @@ const styles = StyleSheet.create({
     color: colors.text.tertiary,
   },
   verifiedText: {
-    color: colors.success.main,
+    color: colors.text.black,
   },
   verifyRequiredHint: {
     color: colors.text.secondary,

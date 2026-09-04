@@ -29,6 +29,7 @@ import { useIneligibilityModal } from '@/hooks/useIneligibilityModal';
 import ErrorContainer from '../ErrorContainer';
 import { appConfig } from '@/src/config/appConfig';
 import { ANALYTICS_EVENT, logAnalyticsEvent } from '@/src/services/analytics';
+import { consoleLogDev } from '@/src/utils/common-helper';
 
 type AddressDetailsFormData = z.input<typeof addressDetailsSchema>;
 type PincodeLookupMessage = { text: string; tone: 'info' | 'warning' } | null;
@@ -129,7 +130,7 @@ export function AddressDetailsStep({ onNext, onPrev }: StepProps) {
     let cancelled = false;
 
     const run = async () => {
-      setPincodeLookupLoading(true);
+            setPincodeLookupLoading(true);
       setIsCityStateEditable(false);
       clearErrors(['city', 'state']);
       setValue('city', '');
@@ -137,6 +138,7 @@ export function AddressDetailsStep({ onNext, onPrev }: StepProps) {
       try {
         const result = await getCityStateFromPincode(trimmed, controller.signal);
         if (cancelled) return;
+        debugger
 
         if (result.ok) {
           clearErrors('pinCode');
@@ -252,11 +254,11 @@ export function AddressDetailsStep({ onNext, onPrev }: StepProps) {
           </>
         }
       >
-        <AppText style={styles.title} variant="h4" weight="bold">
-          Your offer's locked in just need your address!
+        <AppText style={styles.title} variant="h4" weight="semiBold">
+          Your offer&apos;s locked in just need your address!
         </AppText>
         <AppText style={styles.subtitle} variant="caption" color="textprimary">
-          A few quick details and we're ready to go
+          A few quick details and we&apos;re ready to go
         </AppText>
         <View style={styles.content}>
           <ControlledInput
@@ -355,11 +357,13 @@ export function AddressDetailsStep({ onNext, onPrev }: StepProps) {
 const styles = StyleSheet.create({
   title: {
     color: colors.text.primary,
+    fontSize: 20,
+    lineHeight: 30,
     marginBottom: spacing.sm,
   },
   subtitle: {
-    // color: colors.text.secondary,
-    // marginBottom: spacing.sm,
+    fontSize: 14,
+    lineHeight: 21,
   },
   content: {
     paddingTop: spacing.base,

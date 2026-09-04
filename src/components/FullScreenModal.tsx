@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { colors, spacing, typography } from '@/src/theme';
 import { AppLogo } from './AppLogo';
 import { AppText } from './AppText';
@@ -35,6 +36,8 @@ export interface FullScreenModalProps {
   disableContentPadding?: boolean;
   /** Optional style override for content container */
   contentContainerStyle?: StyleProp<ViewStyle>;
+  /** Show a yellow-to-white background behind the modal header area. */
+  showTopGradient?: boolean;
 }
 
 export function FullScreenModal({
@@ -47,6 +50,7 @@ export function FullScreenModal({
   showCloseButton = true,
   disableContentPadding = false,
   contentContainerStyle,
+  showTopGradient = false,
 }: FullScreenModalProps) {
   const insets = useSafeAreaInsets();
 
@@ -59,6 +63,19 @@ export function FullScreenModal({
       statusBarTranslucent={Platform.OS === 'android'}
     >
       <View style={[styles.container, { paddingTop: insets.top }]}>
+        {showTopGradient ? (
+          <LinearGradient
+            pointerEvents="none"
+            colors={[
+              colors.primary.main,
+              'rgba(254, 202, 66, 0.12)',
+              'rgba(254, 202, 66, 0.03)',
+              colors.background.primary,
+            ]}
+            locations={[0, 0.18, 0.36, 0.55]}
+            style={StyleSheet.absoluteFill}
+          />
+        ) : null}
         {/* Header: Logo + Close */}
         {!hideHeader && (
           <View style={styles.header}>

@@ -6,37 +6,36 @@ import {
 } from 'react-native-ssl-public-key-pinning';
 import { API_ENDPOINTS, apiConfig, apiHeaders } from '@/src/config/api';
 
-const SSL_PINNING_ENABLED = process.env.EXPO_PUBLIC_SSL_PINNING_ENABLED === 'true';
+import { fetchAndStoreAppConfig } from '@/src/hooks/useExternalAppConfig';
+import {
+  getEnableSslPinning,
+  getSslIncludeSubdomains,
+  getSslPinningExpirationDate,
+  getSslPublicKeyHashes,
+} from '@/src/config/resolvedAppConfig';
 
 const FORCE_SSL_PINNING_FAILURE = false;
 const PINNED_API_VERIFICATION_TIMEOUT_MS = 7000;
 
-const PINNING_OPTIONS: PinningOptions = {
-  // Only pin company-owned API domains. Do not pin third-party SDK or lender
-  // redirect domains because certificate rotation is outside our control.
-  'api.zapcash.in': {
-    includeSubdomains: true,
-    publicKeyHashes: [
-      'MtJl1Xvef58yNU5l2BSZXkPz+Vv1TjGecQTf7W4Ix5k=', // current
-      'gk7/DWT1g/Hy6epTqoEUpakPAj5rQl61TJvdxUwkXUo=', // backup
-    ],
-    expirationDate: '2026-11-04',
+/**
+ * Build pinning options for the current API host from app-config (with static
+ * fallback). Only the company-owned API host is pinned; third-party/lender
+ * domains are left alone because their cert rotation is outside our control.
+ */
+const buildPinningOptions = (): PinningOptions => ({
+  [getHostname(apiConfig.baseUrl)]: {
+    includeSubdomains: getSslIncludeSubdomains(),
+    publicKeyHashes: getSslPublicKeyHashes(),
+    expirationDate: getSslPinningExpirationDate(),
   },
-  'staging2-api.zapcash.in': {
-    includeSubdomains: true,
-    publicKeyHashes: [
-      'MtJl1Xvef58yNU5l2BSZXkPz+Vv1TjGecQTf7W4Ix5k=',
-      '1o5BkbtUpveOPPaI+FQUmr/g+6Uog/vYk6o7Yh0fSpA=',
-    ],
-    expirationDate: '2026-11-04',
-  },
-};
+});
 
-const TEST_FAILURE_PINNING_OPTIONS: PinningOptions = Object.fromEntries(
-  Object.keys(PINNING_OPTIONS).map((hostname) => [
+const buildTestFailureOptions = (options: PinningOptions): PinningOptions =>
+  Object.fromEntries(
+    Object.keys(options).map((hostname) => [
     hostname,
     {
-      ...PINNING_OPTIONS[hostname],
+      
       publicKeyHashes: [
         'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
         'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=',
@@ -54,7 +53,7 @@ export const isSslPinningAvailable = (): boolean => isNativeSslPinningAvailable(
 const logSslPinningState = (message: string, extra?: Record<string, unknown>): void => {
   console.log('[SSL Pinning]', {
     message,
-    enabled: SSL_PINNING_ENABLED,
+    enabled: getEnableSslPinning(),
     nativeAvailable: isSslPinningAvailable(),
     appEnv: process.env.EXPO_PUBLIC_APP_ENV,
     forceFailure: FORCE_SSL_PINNING_FAILURE,
@@ -118,8 +117,13 @@ const ensureSslPinningErrorListener = (onPinMismatch?: (hostname: string) => voi
 };
 
 export const setupSslPinning = async (onPinMismatch?: (hostname: string) => void): Promise<void> => {
-  if (!SSL_PINNING_ENABLED) {
-    logSslPinningState('disabled by env');
+   // Config-first: pin values come from /external/config. Dedupes with the
+  // routing gate's fetch. The first fetch on a fresh install is unavoidably
+  // unpinned (config lives on the host we pin), then pinning applies.
+  await fetchAndStoreAppConfig();
+
+  if (!getEnableSslPinning()) {
+    logSslPinningState('disabled by app-config');
     return;
   }
 
@@ -143,7 +147,21 @@ export const setupSslPinning = async (onPinMismatch?: (hostname: string) => void
     throw new Error('SSL pinning native module is unavailable in production build');
   }
 
-  const options = FORCE_SSL_PINNING_FAILURE ? TEST_FAILURE_PINNING_OPTIONS : PINNING_OPTIONS;
+
+  const resolvedOptions = buildPinningOptions();
+  const host = getHostname(apiConfig.baseUrl);
+
+  // Never initialize with an empty hash set — that could block all traffic to
+  // the API host. Skip pinning and let the request proceed unpinned instead.
+  if ((resolvedOptions[host]?.publicKeyHashes?.length ?? 0) === 0) {
+    logSslPinningState('skipped: no public key hashes resolved', { host });
+    return;
+  }
+
+
+  const options = FORCE_SSL_PINNING_FAILURE 
+    ? buildTestFailureOptions(resolvedOptions)
+    : resolvedOptions;
 
   logSslPinningState('initializing', {
     domains: Object.keys(options),

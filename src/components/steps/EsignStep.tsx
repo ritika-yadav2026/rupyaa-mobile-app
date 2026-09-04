@@ -21,7 +21,6 @@ import {
 } from '@/src/services/logging/logPoolJourney';
 import { loanService } from '@/src/services/loans/loanService';
 import type { GetExistingActiveLoanResponse } from '@/src/types/loans';
-import { StepResultScreen } from '../StepResultScreen';
 import { getGeoLocationForEsignOrMandate } from '@/src/services/location/geoLocation';
 import { ZapcashLoading } from '../ZapcashLoading';
 import { useStepSimulation } from '@/src/hooks/useStepSimulation';
@@ -47,6 +46,26 @@ const VERIFICATION_POINTS = [
 ] as const;
 
 type EsignScreen = 'ready' | 'polling' | 'pending' | 'success' | 'failed';
+
+interface EsignFailureScreenProps {
+  onRetry: () => void;
+}
+
+function EsignFailureScreen({ onRetry }: EsignFailureScreenProps) {
+  return (
+    <View style={styles.failureScreen}>
+      <AppText style={styles.failureTitle} variant="h3" weight="semiBold">
+        E-sign Not Completed
+      </AppText>
+      <AppText style={styles.failureSubtitle} variant="body">
+        Please complete the e-sign from your email.
+      </AppText>
+      <Button variant="primary" size="medium" fullWidth onPress={onRetry}>
+        Try again
+      </Button>
+    </View>
+  );
+}
 
 export function EsignStep({ onNext, onPrev }: StepProps) {
   const { isSimulating, simulatedState } = useStepSimulation();
@@ -174,6 +193,7 @@ export function EsignStep({ onNext, onPrev }: StepProps) {
   const handleVerifyGoogleAndProceed = useCallback(async (): Promise<void> => {
     if (isGoogleVerifying || isInitiating) return;
 
+  
     setIsGoogleVerifying(true);
     setFailureMessage('');
 
@@ -282,6 +302,7 @@ export function EsignStep({ onNext, onPrev }: StepProps) {
   // }, [onNext]);
 
   const handleCtaPress = useCallback(() => {
+    debugger;
     if (isOauthDone) {
       void handleProceedToEsign();
     } else {
@@ -326,14 +347,8 @@ export function EsignStep({ onNext, onPrev }: StepProps) {
 
     if (simulatedState === 'error') {
       return (
-        <FullScreenModal visible onClose={() => { }}>
-          <StepResultScreen
-            image={IMAGES.FAILED_ESIGN}
-            title="E-sign Not Completed"
-            titleColor={colors.error.main}
-            subtitle="Simulated error: Please complete the e-sign from your email."
-            primaryAction={{ label: 'Try again', onPress: () => { } }}
-          />
+        <FullScreenModal visible onClose={() => { }} showTopGradient>
+          <EsignFailureScreen onRetry={() => { }} />
         </FullScreenModal>
       );
     }
@@ -491,14 +506,8 @@ export function EsignStep({ onNext, onPrev }: StepProps) {
 
   if (screen === 'failed') {
     return (
-      <FullScreenModal visible onClose={handleCloseFailed}>
-        <StepResultScreen
-          image={IMAGES.RETRY}
-          title="E-sign Not Completed"
-          titleColor={colors.error.main}
-          subtitle={failureMessage || 'Please complete the e-sign from your email.'}
-          primaryAction={{ label: 'Try again', onPress: handleRetryFromFailed }}
-        />
+      <FullScreenModal visible onClose={handleCloseFailed} showTopGradient>
+        <EsignFailureScreen onRetry={handleRetryFromFailed} />
       </FullScreenModal>
     );
   }
@@ -531,13 +540,14 @@ const styles = StyleSheet.create({
   },
   verificationImage: {
     width: 160,
-    height: 180,
+    height: 160,
   },
   verificationTitle: {
     color: colors.text.primary,
     lineHeight: 20,
     marginBottom: spacing.xs,
     textAlign: 'center',
+    fontSize: 18,
   },
   verificationSubtitle: {
     color: colors.text.secondary,
@@ -545,6 +555,8 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     marginBottom: spacing.xl,
     textAlign: 'center',
+    fontSize: 12,
+    marginTop: spacing.xs,
   },
   pointsList: {
     width: '100%',
@@ -590,5 +602,26 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     lineHeight: 22,
     textAlign: 'center',
+  },
+  failureScreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacing['2xl'],
+    paddingBottom: spacing['6xl'],
+  },
+  failureTitle: {
+    color: colors.error.main,
+    fontSize: 20,
+    lineHeight: 36,
+    textAlign: 'center',
+    marginBottom: spacing.sm,
+  },
+  failureSubtitle: {
+    color: colors.text.gray,
+    fontSize: 12,
+    lineHeight: 15,
+    textAlign: 'center',
+    marginBottom: spacing['3xl'],
   },
 });

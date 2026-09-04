@@ -48,7 +48,7 @@ export function NeedHelpHeader({
             {greetingLine}
           </AppText>
           <AppText variant="body" weight="medium" style={styles.subtitle}>
-            how can i help you ?
+            How can i help you ?
           </AppText>
         </View>
         <Image
@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.primary.opacity40,
     borderRadius: radius.lg,
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.base,
   },
   greetingCopy: {
     flex: 1,

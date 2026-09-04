@@ -144,7 +144,7 @@ export default function MobileVerificationScreen() {
           <View style={styles.termsCheckboxContainer}>
             <View style={styles.termsCheckbox}>
               <AppText style={styles.termsCheckboxText} variant="caption" color="primary" weight='regular'>
-                {t("By Clicking on the 'Next' button, you agree to our")}{' '}
+                {t("By Clicking on the 'Get OTP' button, you agree to our")}{' '}
                 <AppText variant="caption" style={styles.link} onPress={() => router.push('/privacy')}>{t('Privacy Policy')}</AppText> {t('and')}{' '}
                 <AppText variant="caption" style={styles.link} onPress={() => router.push('/terms')}>{t('Terms & Conditions')}</AppText>
               </AppText>
@@ -168,7 +168,7 @@ export default function MobileVerificationScreen() {
             style={styles.nextButton}
             textStyle={styles.nextButtonText}
           >
-            {t('Next')}
+            {t('Get OTP')}
           </Button>
         </>
       }
@@ -183,8 +183,8 @@ export default function MobileVerificationScreen() {
           </AppText>
         </View>
         <View style={styles.formContainer}>
-          <AppText style={styles.phoneLabel} variant="captionSmall" weight="semiBold">
-            {t('PHONE NUMBER')}
+          <AppText style={styles.phoneLabel} variant="caption" weight="semiBold">
+            {t('Phone Number')}
           </AppText>
           <PhoneInput
             value={phoneNumber}
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     lineHeight: typography.fontSize.base * typography.lineHeight.normal,
   },
   subtitle: {
-    color: colors.text.secondary,
+    color: colors.text.primary,
     fontSize: typography.fontSize.sm,
     lineHeight: typography.fontSize.xxs * typography.lineHeight.normal,
   },
@@ -267,7 +267,6 @@ const styles = StyleSheet.create({
   phoneLabel: {
     color: colors.text.primary,
     marginBottom: spacing.xs,
-    fontSize: typography.fontSize.xxs,
   },
   checkboxContainer: {
     justifyContent: 'flex-start',
@@ -286,7 +285,7 @@ const styles = StyleSheet.create({
   },
   whatsappLabelText: {
     flexShrink: 1,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     fontSize: typography.fontSize.xs,
   },
   whatsappIconContainer: {
@@ -321,13 +320,13 @@ const styles = StyleSheet.create({
     transform: [{ translateY: 2 }],
   },
   nextButton: {
-    height: 38,
+    height: 48,
     borderRadius: radius.md,
     backgroundColor: colors.warning.light,
     paddingVertical: 0,
   },
   nextButtonText: {
     color: colors.text.black,
-    fontSize: typography.fontSize.xxs,
+    fontSize: typography.fontSize.base,
   },
 });

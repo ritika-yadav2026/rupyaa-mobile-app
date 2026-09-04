@@ -21,6 +21,8 @@ export const colors = {
     light: '#33DDAF',
     dark: '#00A77D',
     contrast: '#FFFFFF',
+    bg: '#E6FAF5',
+    'bg-2': '#F0FDF9',
   },
   whatsapp: {
     lighter: '#34C7593D',
@@ -32,6 +34,7 @@ export const colors = {
     primary: '#FFFFFF',
     secondary: '#F8F9FA',
     tertiary: '#F0F2F5',
+    cream: '#FFFCF4',
     dark: '#1A1A1A',
   },
   text: {
@@ -49,7 +52,7 @@ export const colors = {
     light: '#E5E7EB',
     main: '#D1D5DB',
     dark: '#9CA3AF',
-    detailsAccent: '#FFD14133',
+    detailsAccent: '#FECA4233',
   },
   success: {
     main: '#10B981',
@@ -64,13 +67,13 @@ export const colors = {
     dark: '#D97706',
     bg: '#FEF3C7',
     "bg-2": '#FFFBEB',
-    personalDetailsAccent: '#FECA42',
   },
   error: {
     main: '#EF4444',
     light: '#F87171',
-  danger: '#991B1B',
+    danger: '#991B1B',
     dark: '#DC2626',
+    overdue: '#d65d2c',
     bg: '#FEE2E2',
   },
   info: {

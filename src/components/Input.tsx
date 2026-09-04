@@ -6,7 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { colors, spacing, radius, typography } from '../theme';
+import { colors, spacing, radius, getFieldTextStyle } from '../theme';
+import { useLocaleStore } from '../store/useLocaleStore';
 import { AppText } from './AppText';
 
 interface InputProps extends TextInputProps {
@@ -27,6 +28,8 @@ export function Input({
   ...props
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
+  const language = useLocaleStore((state) => state.language);
+  const fieldTextStyle = getFieldTextStyle(language);
 
   return (
     <View style={styles.container}>
@@ -44,8 +47,8 @@ export function Input({
       >
         {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
         <TextInput
-          style={[styles.input, style]}
-          placeholderTextColor={colors.text.primary}
+          style={[styles.input, fieldTextStyle, style]}
+          placeholderTextColor={colors.text.tertiary}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           {...props}
@@ -95,8 +98,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     paddingVertical: spacing.md,
-    fontSize: typography.fontSize.base,
-    color: colors.text.primary,
   },
   leftIcon: {
     marginRight: spacing.sm,

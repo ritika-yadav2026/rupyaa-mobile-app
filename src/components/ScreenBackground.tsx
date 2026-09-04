@@ -1,6 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '@/src/theme';
 
 export interface ScreenBackgroundProps {
   children: ReactNode;
@@ -12,10 +13,10 @@ export function ScreenBackground({ children }: ScreenBackgroundProps) {
       <LinearGradient
         pointerEvents="none"
         colors={[
-          '#FEC530',
-          'rgba(254, 197, 48, 0.12)',
-          'rgba(254, 197, 48, 0.03)',
-          '#FFFFFF',
+          colors.primary.main,
+          'rgba(254, 202, 66, 0.12)',
+          'rgba(254, 202, 66, 0.03)',
+          colors.background.primary,
         ]}
         locations={[0, 0.18, 0.36, 0.55]}
         style={StyleSheet.absoluteFill}
@@ -28,7 +29,7 @@ export function ScreenBackground({ children }: ScreenBackgroundProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.background.primary,
   },
   content: {
     flex: 1,

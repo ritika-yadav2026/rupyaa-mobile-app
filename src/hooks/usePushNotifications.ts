@@ -10,7 +10,6 @@ import { useNotificationLinkNavigation } from './useNotificationLinkNavigation';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUserDetailsStore } from '../store';
 import { consoleLogDev } from '../utils/common-helper';
-import { useNotificationStore } from '../store/useNotificationStore';
 
 
 /**
@@ -26,23 +25,6 @@ export const usePushNotifications = () => {
   const lastHandledNotificationKeyRef = useRef<string | null>(null);
   const lastHandledLinkRef = useRef<string | null>(null);
   const lastHandledTimestampRef = useRef<number>(0);
-
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      const payloadCount = Number(
-        remoteMessage.data?.unreadCount ?? remoteMessage.data?.unread_count
-      );
-      const notificationStore = useNotificationStore.getState();
-
-      if (Number.isFinite(payloadCount) && payloadCount >= 0) {
-        notificationStore.setUnreadCount(payloadCount);
-      } else {
-        notificationStore.incrementUnread();
-      }
-    });
-
-    return unsubscribe;
-  }, []);
 
   /**
    * Navigate to the notification link if needed, guarded against duplicate events that would corrupt the back stack.
@@ -204,7 +186,6 @@ export const usePushNotifications = () => {
     const prev: boolean = prevIsAuthenticatedRef.current;
     if (prev && !isAuthenticated) {
       consoleLogDev('[Push] Logout unsubscribeAll');
-      useNotificationStore.getState().clearUnread();
       // TopicChannelManager.unsubscribeAll();
     }
     prevIsAuthenticatedRef.current = isAuthenticated;

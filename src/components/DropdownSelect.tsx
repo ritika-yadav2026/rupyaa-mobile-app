@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View, TouchableOpacity, Modal, FlatList, StyleSheet, Keyboard } from 'react-native';
+import { View, TouchableOpacity, Modal, FlatList, StyleSheet, Keyboard, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, typography, radius } from '@/src/theme';
+import { colors, spacing, typography, radius, getFieldTextStyle } from '@/src/theme';
+import { useLocaleStore } from '@/src/store/useLocaleStore';
 import { AppText } from './AppText';
 
 export interface DropdownOption<T = unknown> {
@@ -13,6 +14,7 @@ export interface DropdownOption<T = unknown> {
 
 interface DropdownSelectProps<T = unknown> {
   label: string;
+  labelWeight?: 'regular' | 'medium' | 'semiBold' | 'bold';
   /** Title shown inside the modal. Falls back to `label` if omitted. */
   modalTitle?: string;
   value?: T;
@@ -28,6 +30,7 @@ interface DropdownSelectProps<T = unknown> {
 
 export function DropdownSelect<T = unknown>({
   label,
+  labelWeight = 'medium',
   modalTitle,
   value,
   options,
@@ -39,11 +42,13 @@ export function DropdownSelect<T = unknown>({
   helperText,
 }: DropdownSelectProps<T>) {
   const { t } = useTranslation();
+  const language = useLocaleStore((state) => state.language);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const insets = useSafeAreaInsets();
 
   const selectedOption = options.find((opt) => opt.value === value);
-  const displayText = selectedOption ? selectedOption.label : placeholder;
+  const displayText = selectedOption ? t(selectedOption.label) : t(placeholder);
+  const fieldTextStyle = getFieldTextStyle(language, { isPlaceholder: !selectedOption });
 
   const handleSelect = (optionValue: T) => {
     onChange(optionValue);
@@ -63,7 +68,7 @@ export function DropdownSelect<T = unknown>({
 
   return (
     <View style={styles.container}>
-      <AppText style={styles.label}>
+      <AppText style={styles.label} weight={labelWeight}>
         {t(label)}
         {required && <AppText style={styles.required}> *</AppText>}
       </AppText>
@@ -72,10 +77,10 @@ export function DropdownSelect<T = unknown>({
         onPress={handleOpen}
         activeOpacity={0.7}
       >
-        <AppText style={[styles.inputText, !selectedOption && styles.placeholderText]}>
+        <Text numberOfLines={1} style={[styles.inputText, fieldTextStyle]}>
           {displayText}
-        </AppText>
-        <Ionicons name="chevron-down" size={20} color={colors.text.secondary} />
+        </Text>
+        <Ionicons name="chevron-down" size={16} color={colors.text.secondary} />
       </TouchableOpacity>
       {error && <AppText style={styles.errorText}>{error}</AppText>}
       {helperText && !error && <AppText style={styles.helperText}>{helperText}</AppText>}
@@ -133,13 +138,12 @@ export function DropdownSelect<T = unknown>({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
   },
   label: {
     fontSize: typography.fontSize.sm,
-    fontFamily: typography.fontFamily.medium,
     color: colors.text.primary,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
   },
   required: {
     color: colors.error.main,
@@ -148,9 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary.lightest_3,
     borderRadius: radius.md,
     paddingHorizontal: spacing.base,
-    paddingVertical: spacing.md,
-    fontSize: typography.fontSize.base,
-    color: colors.text.primary,
+    height: 40,
     borderWidth: 1,
     borderColor: colors.primary.main,
     flexDirection: 'row',
@@ -161,12 +163,7 @@ const styles = StyleSheet.create({
     borderColor: colors.error.main,
   },
   inputText: {
-    fontSize: typography.fontSize.base,
-    color: colors.text.primary,
     flex: 1,
-  },
-  placeholderText: {
-    color: colors.text.tertiary,
   },
   errorText: {
     fontSize: typography.fontSize.xs,

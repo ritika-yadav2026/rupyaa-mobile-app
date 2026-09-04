@@ -10,6 +10,7 @@ interface CountdownTimerProps {
   textBefore?: string;
   linkText?: string;
   accentColor?: string;
+  textColor?: string;
   secondsOnlyFormat?: boolean;
 }
 
@@ -19,6 +20,7 @@ export function CountdownTimer({
   textBefore = "Didn't receive the OTP?",
   linkText = 'Resend',
   accentColor,
+  textColor,
   secondsOnlyFormat = false,
 }: CountdownTimerProps) {
   const { t } = useTranslation();
@@ -51,7 +53,7 @@ export function CountdownTimer({
 
   const formatTime = (time: number) => {
     if (secondsOnlyFormat) {
-      return `00:${time.toString().padStart(2, '0')}`;
+      return `00:${time.toString().padStart(2, '0')}s`;
     }
     const mins = Math.floor(time / 60);
     const secs = time % 60;
@@ -77,7 +79,7 @@ export function CountdownTimer({
 
   return (
     <View style={styles.container}>
-      <AppText style={styles.text} variant="caption">
+      <AppText style={[styles.text, textColor ? { color: textColor } : null]} variant="caption">
         {`${t(textBefore)} `}
       </AppText>
       {renderLinkText()}
@@ -94,12 +96,16 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.text.secondary,
+    fontSize: 14,
+    lineHeight: 21,
   },
   timer: {
     color: colors.text.tertiary,
   },
   link: {
     color: colors.primary.main,
+    fontSize: 14,
+    lineHeight: 21,
     textDecorationLine: 'underline',
   },
 });

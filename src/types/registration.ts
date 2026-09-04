@@ -86,7 +86,9 @@ export interface GetPersonalDetailsResponse {
   salary?: number | string;
   phoneNumber?: string;
   employmentMode?: string;
+  organization?: string;
   designation?: string;
+  declaredSalaryDay?: number;
   softPullConsentWithdrawn?: boolean;
   hasNoActiveLoan?: boolean;
   disableFields?: boolean;
@@ -98,6 +100,13 @@ export interface GetPersonalDetailsResponse {
   latestSmsDate?: number | string;
 }
 
+
+/** Employment section defaults for the merged personal-details form. */
+export interface PersonalDetailsEmploymentFormDefaults {
+  employmentMode?: EmploymentType;
+  primaryField?: string;
+  declaredSalaryDay?: number;
+}
 /** Response body for GET /user/get-employment-details */
 export interface GetEmploymentDetailsResponse {
   employmentMode?: string;

@@ -4,11 +4,13 @@ export {
   selfEmployedSchema,
   unemployedSchema,
   employmentDetailsFormSchema,
+  personalWithEmploymentSchema,
   type PersonalDetailsSchema,
   type SalariedSchema,
   type SelfEmployedSchema,
   type UnemployedSchema,
   type EmploymentDetailsFormSchema,
+  type PersonalWithEmploymentSchema,
 } from './schemas';
 
 export {
@@ -30,6 +32,8 @@ export {
   postBankDetails,
   mapPersonalDetailsToApi,
   mapPersonalDetailsFromApi,
+  mapEmploymentDefaultsFromPersonalDetailsApi,
+  mapEmploymentDetailsFromPersonalDetailsApi,
   mapEmploymentTypeToApi,
   mapEmploymentDetailsToApi,
   mapEmploymentDetailsFromApi,

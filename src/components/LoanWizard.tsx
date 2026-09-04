@@ -202,8 +202,8 @@ export function LoanWizard() {
 
   const handleOfferStatusBackToHome = useCallback(() => {
     setShowOfferStatusModal(false);
-    handleGoHome();
-  }, [handleGoHome, setShowOfferStatusModal]);
+    router.replace(HOME_ROUTE);
+  }, [router, setShowOfferStatusModal]);
 
   const handleNext = useCallback(() => {
     const { phaseIndex: currentPhaseIndex, substepIndex: currentSubstepIdx } = useFlowStore.getState();
@@ -241,6 +241,7 @@ export function LoanWizard() {
   consoleLogDev('journeyStoppedReason', journeyStoppedReason);
 
   const hasSyncError = stageSyncStatus === 'error';
+  const isUnderReview = userStage === UserStagesInBackend.APPLICATION_STATUS;
   if (!StepComponent) {
     return null;
   }
@@ -253,13 +254,15 @@ export function LoanWizard() {
       <SafeAreaView edges={['top']} style={styles.wizardHeader}>
         <View style={styles.wizardHeaderContent}>
           <AuthHeader />
-          {appConfig.useProgressStepperV2 ? (
-            <ProgressStepperV2
-              {...stepperProps}
-              accentColor={phaseIndex === 0 && substepIndex === 0 ? colors.warning.personalDetailsAccent : undefined}
-            />
-          ) : (
-            <ProgressStepper {...stepperProps} />
+          {!isUnderReview && (
+            appConfig.useProgressStepperV2 ? (
+              <ProgressStepperV2
+                {...stepperProps}
+                accentColor={colors.primary.main}
+              />
+            ) : (
+              <ProgressStepper {...stepperProps} />
+            )
           )}
         </View>
       </SafeAreaView>
@@ -296,10 +299,9 @@ export function LoanWizard() {
         isCheckingOffers={isResolvingOfferStatusStage}
       />
       {/* Shown when backend stage is APPLICATION_STATUS (application submitted, pending review).
-          Checked directly from userStage so removing APPLICATION_STATUS from userStages.ts
-          automatically removes this overlay with no other changes needed. */}
+          The shared header remains visible while its progress stepper is hidden above. */}
       <UnderReviewModal
-        visible={userStage === UserStagesInBackend.APPLICATION_STATUS}
+        visible={isUnderReview}
         onCtaPress={handleUnderReviewGoHome}
       />
       <PreEnachReviewGateModal

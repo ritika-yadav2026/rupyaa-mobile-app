@@ -1,12 +1,13 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, TextInput } from 'react-native';
 import { useScrollToFirstError } from '@/hooks/useScrollToFirstError';
 import type { ScrollViewScrollToFocusedInput } from '@/hooks/useScrollToFirstError';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
+import type { FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { AppText } from '../AppText';
-import { ControlledInput, ControlledDateInput, ControlledRadioGroup } from '../ControlledInput';
+import { ControlledInput, ControlledDateInput, ControlledRadioGroup, ControlledDropdown } from '../ControlledInput';
 import { Button } from '../Button';
 import { ConfirmationSheet, type ConfirmationField } from '../ConfirmationSheet';
 import { FormLayout } from '../FormLayout';
@@ -14,17 +15,25 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import {
   RegistrationService,
   personalDetailsSchema,
+  personalWithEmploymentSchema,
   postPersonalDetails,
   mapPersonalDetailsToApi,
+  mapEmploymentDetailsToApi,
   getPersonalDetails,
   mapPersonalDetailsFromApi,
+  mapEmploymentDefaultsFromPersonalDetailsApi,
+  mapEmploymentDetailsFromPersonalDetailsApi,
   createRegistrationSubmit,
-  handleRegistrationStepSuccess,
 } from '@/src/services/registration';
 import { devLog } from '@/src/utils';
 import { getApiErrorDisplayMessage, getRejectionMessage } from '@/src/utils/common-helper';
-import { GENDER_OPTIONS } from '@/src/data/registration';
-import type { PersonalDetails } from '@/src/types/registration';
+import { GENDER_OPTIONS, EMPLOYMENT_OPTIONS } from '@/src/data/registration';
+import type {
+  PersonalDetails,
+  PostPersonalDetailsRequest,
+  EmploymentType,
+  EmploymentDetails,
+} from '@/src/types/registration';
 import type { StepProps } from '@/src/types/flow';
 import { colors, spacing } from '@/src/theme';
 import { useRegistrationSubmit } from '@/hooks/useRegistrationSubmit';
@@ -37,22 +46,60 @@ import { useIneligibilityModal } from '@/hooks/useIneligibilityModal';
 import { ConsentNotice } from '../ConsentNotice';
 import { ANALYTICS_EVENT, logAnalyticsEvent } from '@/src/services/analytics';
 import { pushLoanJourneyApiError } from '@/src/services/logging/logPoolJourney';
-import { ShieldCheck } from 'lucide-react-native';
+// [single-screen-merge] Reuse the employment step's helpers/nav so the merged
+// screen does not duplicate that logic. EmploymentTypeStep/EmploymentDetailsStep
+// stay in the repo (out of the flow); EmploymentDetailsStep remains the source of
+// truth for these helpers when we revert.
+import {
+  FORM_CONFIG_BY_MODE,
+  MINIMAL_DETAILS_BY_MODE,
+  salaryDayOptions,
+  handlePostSubmitSuccess,
+} from './EmploymentDetailsStep';
 
-type PersonalDetailsFormData = z.input<typeof personalDetailsSchema>;
+type MergedFormData = z.input<typeof personalWithEmploymentSchema>;
 
-const PERSONAL_FIELD_ORDER: (keyof PersonalDetailsFormData)[] = [
+// [single-screen-merge] Combined submit input: personal + employment together.
+type MergedSubmitInput = {
+  personal: PersonalDetails;
+  employmentMode: EmploymentType;
+  details: EmploymentDetails;
+};
+
+// Employment-section fields. When one of these is the first error we scroll to the
+// end to reveal the whole section above the footer/keyboard — the generic
+// focus-scroll under-scrolls it because it sits under the tall Employment Type card
+// near the bottom. Company Name is still focused (it's a text input); the radio and
+// dropdown are not focusable.
+const EMPLOYMENT_FIELDS: (keyof MergedFormData)[] = ['employmentMode', 'primaryField', 'declaredSalaryDay'];
+
+// Visual field order for scroll/focus-to-first-error. Fields without a focusable
+// TextInput ref (gender, employmentMode, declaredSalaryDay) are skipped by the
+// hook, but stay listed so the "first error" is picked in on-screen order.
+const FIELD_ORDER: (keyof MergedFormData)[] = [
   'pan',
   'pincode',
   'dob',
   'gender',
   'salary',
+  'employmentMode',
+  'primaryField',
+  'declaredSalaryDay',
 ];
 
-const submitPersonalDetails = createRegistrationSubmit<PersonalDetails, ReturnType<typeof mapPersonalDetailsToApi>>({
+// [single-screen-merge] Single POST /user/personal-details carrying personal +
+// employment. Reuses both existing mappers; postEmploymentDetails is no longer
+// called. Restore the split submits in EmploymentTypeStep/EmploymentDetailsStep to revert.
+const submitMergedDetails = createRegistrationSubmit<MergedSubmitInput, PostPersonalDetailsRequest>({
   useMock: appConfig.useMockApi,
-  mockSave: (data) => RegistrationService.savePersonalDetails(data),
-  mapToPayload: mapPersonalDetailsToApi,
+  mockSave: async ({ personal, details }) => {
+    await RegistrationService.savePersonalDetails(personal);
+    await RegistrationService.saveEmploymentDetails(details);
+  },
+  mapToPayload: ({ personal, employmentMode, details }) => ({
+    ...mapPersonalDetailsToApi(personal),
+    ...mapEmploymentDetailsToApi(employmentMode, details),
+  }),
   apiCall: postPersonalDetails,
 });
 
@@ -79,16 +126,27 @@ const mapPersonalDetailsToConfirmationFields = (data: PersonalDetails): Confirma
   { label: 'Monthly Income', value: formatCurrencyINR(data.salary) || '-' },
 ];
 
+// [single-screen-merge] Extra confirmation rows for employment.
+const mapEmploymentToConfirmationFields = (
+  employmentMode: EmploymentType,
+  details: EmploymentDetails
+): ConfirmationField[] => {
+  const typeLabel = EMPLOYMENT_OPTIONS.find((o) => o.value === employmentMode)?.label ?? employmentMode;
+  const rows: ConfirmationField[] = [{ label: 'Employment Type', value: typeLabel }];
+  if ('companyName' in details) {
+    rows.push({ label: 'Company Name', value: details.companyName || '-' });
+    rows.push({ label: 'Salary Credit Day', value: String(details.declaredSalaryDay) });
+  }
+  return rows;
+};
+
 export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
-  // Backend stages reference (see src/config/userStages.ts)
-  // PERSONAL_DETAILS, MODE_OF_EMPLOYMENT, SOFT_PULL, BANK_STATEMENT, OFFERINGS,
-  // CONTACT_DETAILS, ADDRESS_DETAILS, FAMILY_REFERENCE, BANK_DETAILS, AADHAAR_KYC,
-  // FACE_KYC, APPLICATION_STATUS, ACTIVE_LOAN_DASHBOARD, CBL_JOURNEY, REJECTED, ENACH,
-  // ESIGN, WAITING_FOR_DISBURSEMENT
-  const currentStage: UserStage = UserStagesInBackend.PERSONAL_DETAILS;
+  // [single-screen-merge] After the merged submit the backend advances to
+  // SOFT_PULL, so we reuse the employment step's SOFT_PULL post-submit nav.
+  const currentStage: UserStage = UserStagesInBackend.SOFT_PULL;
   const syncFromUserStage = useFlowStore((s) => s.syncFromUserStage);
   const { handleFailedResponse } = useIneligibilityModal();
-  const [pendingData, setPendingData] = useState<PersonalDetails | null>(null);
+  const [pendingData, setPendingData] = useState<MergedSubmitInput | null>(null);
   const didAttemptConfirmRef = useRef(false);
 
   // Refs for input fields and scroll view
@@ -97,33 +155,62 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
   const pincodeInputRef = useRef<TextInput>(null);
   const dobInputRef = useRef<TextInput>(null);
   const salaryInputRef = useRef<TextInput>(null);
+  const companyInputRef = useRef<TextInput>(null);
 
-  const personalFieldRefs = useMemo(
+  const fieldRefs = useMemo(
     () => ({
       pan: panInputRef,
       pincode: pincodeInputRef,
       dob: dobInputRef,
       salary: salaryInputRef,
+      primaryField: companyInputRef,
     }),
     []
   );
-  const onValidationError = useScrollToFirstError<PersonalDetailsFormData>(
-    PERSONAL_FIELD_ORDER,
-    personalFieldRefs,
+  const focusFirstError = useScrollToFirstError<MergedFormData>(
+    FIELD_ORDER,
+    fieldRefs,
     scrollViewRef as React.RefObject<ScrollViewScrollToFocusedInput | null>
   );
 
+  // If the first error is in the employment section (radio / Company Name / salary
+  // day), scroll to the end so the whole section is visible above the footer/keyboard
+  // — still focusing Company Name for the cursor. Otherwise defer to the
+  // focus-first-error hook (personal fields near the top scroll fine on their own).
+  const onValidationError = useCallback(
+    (errors: FieldErrors<MergedFormData>) => {
+      const firstErrorField = FIELD_ORDER.find((field) => errors[field]);
+      if (firstErrorField && EMPLOYMENT_FIELDS.includes(firstErrorField)) {
+        if (firstErrorField === 'primaryField') {
+          companyInputRef.current?.focus();
+        }
+        const scroller = scrollViewRef.current as unknown as {
+          scrollToEnd?: (options?: { animated?: boolean }) => void;
+        };
+        // Delay lets the keyboard start opening (when Company Name is focused) so
+        // the end position accounts for the reduced viewport.
+        setTimeout(() => scroller?.scrollToEnd?.({ animated: true }), 150);
+        return;
+      }
+      focusFirstError(errors);
+    },
+    [focusFirstError]
+  );
+
   const { submit, isPending, errorMessage, clearError, setErrorMessage } =
-    useRegistrationSubmit<PersonalDetails>({
-      mutationFn: submitPersonalDetails,
+    useRegistrationSubmit<MergedSubmitInput>({
+      mutationFn: submitMergedDetails,
       onSuccess: () => {
         didAttemptConfirmRef.current = false;
         setPendingData(null);
-        void logAnalyticsEvent(ANALYTICS_EVENT.PERSONAL_DETAIL_PAGE_SUBMIT);
-        void handleRegistrationStepSuccess({
-          currentStage,
+        // Merged personal + employment screen has its own combined submit event.
+        void logAnalyticsEvent(ANALYTICS_EVENT.PERSONAL_EMPLOYMENT_DETAIL_PAGE_SUBMIT);
+        // Reuse employment step's post-submit navigation (Credeau + soft-pull).
+        void handlePostSubmitSuccess({
           onNext,
+          setErrorMessage,
           syncFromUserStage,
+          currentStage,
         });
       },
       onFailedResponse: (data) => {
@@ -133,8 +220,8 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
       },
     });
 
-  const { control, handleSubmit, reset } = useForm<PersonalDetailsFormData>({
-    resolver: zodResolver(personalDetailsSchema),
+  const { control, handleSubmit, reset, getValues } = useForm<MergedFormData>({
+    resolver: zodResolver(personalWithEmploymentSchema),
     defaultValues: {
       name: '',
       dob: appConfig.prefillPersonalWithPiyushData ? '30/11/1985' : '',
@@ -142,17 +229,31 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
       pincode: appConfig.prefillPersonalWithPiyushData ? '311404' : '',
       pan: '',
       salary: appConfig.prefillPersonalWithPiyushData ? '51000' : '',
+      employmentMode: undefined,
+      primaryField: '',
+      declaredSalaryDay: 1,
     },
   });
+
+  // Watch the in-form employment type to toggle the salaried work fields.
+  const selectedMode = useWatch({ control, name: 'employmentMode' });
+  const isSalaried = selectedMode === 'salaried';
 
   useEffect(() => {
     devLog.screenEnter('personal-details');
     const loadSavedData = async () => {
-      // const saved = await RegistrationService.getRegistrationData();
-      // if (saved?.personalDetails) {
-      //   reset(saved.personalDetails);
-      //   return;
-      // }
+      // Restore a previously-chosen employment type / work details (resume).
+      const saved = await RegistrationService.getRegistrationData();
+      const savedMode = (saved?.employmentMode as EmploymentType | undefined) ?? undefined;
+      const savedDetails = saved?.employmentDetails;
+      const localEmploymentDefaults = {
+        employmentMode: savedMode,
+        primaryField:
+          savedMode && savedDetails
+            ? FORM_CONFIG_BY_MODE[savedMode].getSavedPrimaryValue(savedDetails)
+            : '',
+        declaredSalaryDay: savedDetails?.declaredSalaryDay ?? 1,
+      };
 
       const response = await getPersonalDetails();
       if (!response.success) {
@@ -164,23 +265,46 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
         setErrorMessage(
           getApiErrorDisplayMessage(response.error) || REGISTRATION_ERROR_MESSAGES.generic
         );
+        if (savedMode) reset({ ...getValues(), ...localEmploymentDefaults });
         return;
       }
 
       const mapped = mapPersonalDetailsFromApi(response.data);
+      const apiEmploymentDefaults = mapEmploymentDefaultsFromPersonalDetailsApi(response.data);
+      const employmentDefaults = {
+        employmentMode: apiEmploymentDefaults.employmentMode ?? localEmploymentDefaults.employmentMode,
+        primaryField:
+          apiEmploymentDefaults.primaryField ||
+          localEmploymentDefaults.primaryField,
+        declaredSalaryDay:
+          apiEmploymentDefaults.declaredSalaryDay ??
+          localEmploymentDefaults.declaredSalaryDay,
+      };
       const rejectReason = extractRejectReason(response.data);
       if (rejectReason) {
         setErrorMessage(rejectReason);
       }
-      const hasValues = Object.values(mapped).some((value) => value && value !== '');
-      if (hasValues) {
+      const hasPersonalValues = Object.values(mapped).some((value) => value && value !== '');
+      const hasEmploymentValues = Boolean(apiEmploymentDefaults.employmentMode);
+      const formPatch: Partial<MergedFormData> = { ...employmentDefaults };
+      if (hasPersonalValues) {
+        Object.assign(formPatch, mapped);
         await RegistrationService.savePersonalDetails(mapped);
-        reset(mapped);
+      }
+      if (hasEmploymentValues) {
+        const employmentFromApi = mapEmploymentDetailsFromPersonalDetailsApi(response.data);
+        if (employmentFromApi) {
+          await RegistrationService.saveEmploymentType(employmentFromApi.employmentMode);
+          await RegistrationService.saveEmploymentDetails(employmentFromApi.details);
+        }
+      }
+      if (hasPersonalValues || hasEmploymentValues || savedMode) {
+        reset({ ...getValues(), ...formPatch });
       }
     };
     loadSavedData();
     return () => devLog.screenLeave('personal-details');
-  }, [reset, setErrorMessage]);
+  }, [reset, getValues, setErrorMessage]);
 
   useEffect(() => {
     // If the confirm attempt fails (API error), close the sheet so the user sees the inline error.
@@ -191,18 +315,26 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
     setPendingData(null);
   }, [errorMessage, isPending]);
 
-  const onReview = (data: PersonalDetailsFormData) => {
+  const onReview = (data: MergedFormData) => {
     clearError();
-    // Schema transforms name from optional to required (empty string)
-    const transformedData = personalDetailsSchema.parse(data);
-    devLog.formData('Personal Details', transformedData);
-    setPendingData(transformedData as PersonalDetails);
+    // Schema strips extra keys; parse personal fields (transforms pan/name).
+    const personal = personalDetailsSchema.parse(data) as PersonalDetails;
+    const mode = data.employmentMode as EmploymentType;
+    // Build employment details from the reused config (salaried) or minimal shape.
+    const details: EmploymentDetails = mode === 'salaried'
+      ? FORM_CONFIG_BY_MODE.salaried.buildDetails(data.primaryField ?? '', data.declaredSalaryDay ?? 1)
+      : MINIMAL_DETAILS_BY_MODE[mode as 'self_employed' | 'unemployed'];
+    devLog.formData('Personal + Employment Details', { personal, employmentMode: mode });
+    setPendingData({ personal, employmentMode: mode, details });
   };
 
   const handleConfirm = () => {
     if (!pendingData) return;
     didAttemptConfirmRef.current = true;
     clearError();
+    // Persist employment selection locally so a resume can prefill the form.
+    void RegistrationService.saveEmploymentType(pendingData.employmentMode);
+    void RegistrationService.saveEmploymentDetails(pendingData.details);
     submit(pendingData);
   };
 
@@ -225,6 +357,13 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
     salaryInputRef.current?.focus();
   };
 
+  const confirmationFields = pendingData
+    ? [
+        ...mapPersonalDetailsToConfirmationFields(pendingData.personal),
+        ...mapEmploymentToConfirmationFields(pendingData.employmentMode, pendingData.details),
+      ]
+    : null;
+
   return (
     <>
       <FormLayout
@@ -238,14 +377,12 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
             <ConsentNotice
               hideLockIcon={true}
               text="Your details are safe and encrypted"
-              icon={<ShieldCheck size={18} color={colors.warning.personalDetailsAccent} />}
             />
             <Button
               variant="primary"
               size="large"
               fullWidth
-              style={styles.nextButton}
-              textStyle={styles.nextButtonText}
+              style={{ marginBottom: 0 }}
               disabled={isPending}
               loading={isPending}
               onPress={handleSubmit(onReview, onValidationError)}
@@ -302,7 +439,6 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
               options={GENDER_OPTIONS}
               label="Gender"
               variant="row"
-              accentColor={colors.warning.personalDetailsAccent}
             />
           </View>
           <ControlledInput
@@ -315,20 +451,52 @@ export function PersonalDetailsStep({ onNext, onPrev }: StepProps) {
             inputRef={salaryInputRef}
             returnKeyType="done"
           />
+
+          {/* [single-screen-merge] Employment type + salaried work details, folded
+              in from EmploymentTypeStep / EmploymentDetailsForm. */}
+          <View style={styles.employmentSection}>
+            <ControlledRadioGroup
+              control={control}
+              name="employmentMode"
+              options={EMPLOYMENT_OPTIONS}
+              label="Employment Type"
+              variant="card"
+            />
+            {isSalaried ? (
+              <View style={styles.salariedFields}>
+                <ControlledInput
+                  control={control}
+                  name="primaryField"
+                  label="Company Name"
+                  placeholder={FORM_CONFIG_BY_MODE.salaried.placeholder}
+                  required
+                  inputRef={companyInputRef}
+                />
+                <ControlledDropdown
+                  control={control}
+                  name="declaredSalaryDay"
+                  label="Salary Credit Day"
+                  options={salaryDayOptions}
+                  placeholder="Select day"
+                  required
+                  helperText="The date your salary is usually credited to your bank account"
+                />
+              </View>
+            ) : null}
+          </View>
         </View>
       </FormLayout>
 
       <ConfirmationSheet
         visible={pendingData !== null}
         title="Please confirm your details"
-        data={pendingData ? mapPersonalDetailsToConfirmationFields(pendingData) : null}
+        data={confirmationFields}
         onEdit={handleEdit}
         onClose={handleEdit}
         onConfirm={handleConfirm}
         editLabel="Edit details"
         confirmLabel="Confirm"
         confirmLoading={isPending}
-        accentColor={colors.warning.personalDetailsAccent}
       />
 
       {/* Shown on top of loan-journey when the user is found ineligible */}
@@ -360,11 +528,18 @@ const styles = StyleSheet.create({
   content: {
     // paddingTop: spacing.base,
   },
-  nextButtonText: {
-    color: colors.text.black,
+  employmentSection: {
+    marginTop: spacing.base,
+    // Bottom slack (always present) so the scroll-to-error can lift the last
+    // fields — the employment radio, or Company Name under the tall card — clear
+    // of the footer/keyboard.
+    // paddingBottom: spacing['6xl'],
   },
-  nextButton: {
-    marginBottom: 0,
-    backgroundColor: colors.warning.personalDetailsAccent,
+  sectionTitle: {
+    color: colors.text.primary,
+    marginBottom: spacing.base,
+  },
+  salariedFields: {
+    marginTop: spacing.base,
   },
 });

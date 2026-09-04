@@ -95,4 +95,8 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSize.xxs,
     lineHeight: typography.fontSize.xxs * typography.lineHeight.normal,
   },
+  captionMedium: {
+    fontSize: typography.fontSize.base,
+    lineHeight: typography.fontSize.base * typography.lineHeight.normal,
+  },
 });

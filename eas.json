@@ -57,7 +57,8 @@
     },
     "testflight": {
       "extends": "preview",
-      "distribution": "store"
+      "distribution": "store",
+      "channel": "testflight"
     },
     "development": {
       "android": {

@@ -156,6 +156,7 @@ export function FamilyDetailsStep({ onNext, onPrev }: StepProps) {
             control={control}
             name="name"
             label="Name"
+            labelWeight="semiBold"
             placeholder="e.g. John Doe"
             autoCapitalize="words"
             required
@@ -167,12 +168,14 @@ export function FamilyDetailsStep({ onNext, onPrev }: StepProps) {
             control={control}
             name="relation"
             label="Relationship"
+            labelWeight="semiBold"
             required
           />
           <ControlledInput
             control={control}
             name="mobile"
             label="Mobile"
+            labelWeight="semiBold"
             leftAccessory={<PhonePrefix />}
             placeholder="10-digit number"
             keyboardType="phone-pad"
@@ -191,10 +194,13 @@ export function FamilyDetailsStep({ onNext, onPrev }: StepProps) {
 const styles = StyleSheet.create({
   title: {
     color: colors.text.primary,
+    fontSize: 20,
+    lineHeight: 30,
     marginBottom: spacing.sm,
   },
   subtitle: {
-    lineHeight: 22,
+    fontSize: 14,
+    lineHeight: 21,
   },
   content: {
     paddingTop: spacing.base,

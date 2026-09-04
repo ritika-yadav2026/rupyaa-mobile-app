@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Image } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 import { AppText } from '../AppText';
 import { Button } from '../Button';
 import { FormLayout } from '../FormLayout';
 import { SuccessModal } from '../SuccessModal';
 import { ErrorModal } from '../ErrorModal';
 import type { StepProps } from '@/src/types/flow';
-import { colors, spacing, radius } from '@/src/theme';
+import { colors, spacing } from '@/src/theme';
 import {
   createMandate,
   getMandateDetails,
@@ -22,7 +23,6 @@ import { UserStagesInBackend } from '@/src/config/userStages';
 import { useFlowStore } from '@/src/store/useFlowStore';
 import { devConfig } from '@/src/config/dev';
 import { useStepSimulation } from '@/src/hooks/useStepSimulation';
-import { ShieldCheck } from 'lucide-react-native';
 import { IMAGES } from '@/src/constants/images';
 import { getApiErrorDisplayMessage, SUCCESS_MODAL_AUTO_NEXT_DELAY_MS } from '@/src/utils/common-helper';
 import ErrorContainer from '../ErrorContainer';
@@ -320,29 +320,35 @@ export function EnachStep({ onNext, onPrev }: StepProps): React.JSX.Element {
     >
       <View style={styles.content}>
         <View style={styles.iconWrapper}>
-          <View style={styles.iconCircle}>
-            <ShieldCheck size={40} color={colors.primary.main} strokeWidth={1.6} />
-          </View>
-
+          <SvgUri
+            uri={Image.resolveAssetSource(IMAGES.ENACH_SHIELD).uri}
+            width={80}
+            height={80}
+            accessibilityLabel="Secure auto-payment"
+          />
         </View>
         <AppText style={styles.title} variant="h4" weight="semiBold">
           Set Up Auto-Payment for Your Loan
         </AppText>
-        <AppText style={styles.subtext} variant="body">
-          {SUBTEXT}
-        </AppText>
-
-        <View style={styles.reassuranceList}>
-          {REASSURANCE_POINTS.map((point) => (
-            <View key={point} style={styles.reassuranceRow}>
-              <AppText style={styles.bullet} variant="body">
-                •
-              </AppText>
-              <AppText style={styles.reassuranceText} variant="caption">
-                {point}
-              </AppText>
-            </View>
-          ))}
+        <View style={styles.infoCard}>
+          <AppText style={styles.subtext} variant="body">
+            {SUBTEXT}
+          </AppText>
+          <AppText style={styles.benefitsTitle} variant="caption" weight="semiBold">
+            Benefits of E-Nach :
+          </AppText>
+          <View style={styles.reassuranceList}>
+            {REASSURANCE_POINTS.map((point) => (
+              <View key={point} style={styles.reassuranceRow}>
+                <AppText style={styles.bullet} variant="body" weight="bold">
+                  •
+                </AppText>
+                <AppText style={styles.reassuranceText} variant="caption">
+                  {point}
+                </AppText>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
     </FormLayout>
@@ -360,21 +366,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.lg,
   },
-  iconCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: colors.primary.lightest,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   subtext: {
     color: colors.text.primary,
     marginBottom: spacing.xl,
     lineHeight: 22,
+    fontSize: 14,
+  },
+  infoCard: {
+    backgroundColor: colors.primary.lightest_2,
+    borderRadius: 12,
+    padding: spacing.base,
   },
   reassuranceList: {
-    marginBottom: spacing.lg,
+    marginBottom: 0,
+  },
+  benefitsTitle: {
+    color: colors.text.primary,
+    marginBottom: spacing.sm,
   },
   reassuranceRow: {
     flexDirection: 'row',
@@ -382,7 +390,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   bullet: {
-    color: colors.primary.main,
+    color: colors.text.black,
     marginRight: spacing.sm,
   },
   reassuranceText: {
@@ -391,7 +399,7 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   disclaimer: {
-    color: colors.text.secondary,
+    color: colors.text.primary,
     lineHeight: 18,
     marginBottom: spacing.md,
   },
@@ -418,5 +426,6 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     marginBottom: spacing.lg,
     textAlign: 'center',
+    fontSize: 18,
   },
 });

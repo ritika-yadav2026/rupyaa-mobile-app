@@ -12,6 +12,7 @@ interface ControlledInputProps<T extends FieldValues>
   control: Control<T>;
   name: Path<T>;
   label: string;
+  labelWeight?: 'regular' | 'medium' | 'semiBold' | 'bold';
   required?: boolean;
   labelAccessory?: ReactNode;
   leftAccessory?: ReactNode;
@@ -30,6 +31,7 @@ export function ControlledInput<T extends FieldValues>({
   control,
   name,
   label,
+  labelWeight,
   required = false,
   labelAccessory,
   leftAccessory,
@@ -83,6 +85,7 @@ export function ControlledInput<T extends FieldValues>({
           <FormInput
             inputRef={setRefs}
             label={label}
+            labelWeight={labelWeight}
             labelAccessory={labelAccessory}
             leftAccessory={leftAccessory}
             rightAccessory={rightAccessory}
@@ -178,6 +181,7 @@ interface ControlledDropdownProps<T extends FieldValues, V = unknown> {
   name: Path<T>;
   options: DropdownOption<V>[];
   label: string;
+  labelWeight?: 'regular' | 'medium' | 'semiBold' | 'bold';
   required?: boolean;
   placeholder?: string;
   /** Helper text shown below the dropdown */
@@ -189,6 +193,7 @@ export function ControlledDropdown<T extends FieldValues, V = unknown>({
   name,
   options,
   label,
+  labelWeight,
   required = false,
   placeholder,
   helperText,
@@ -200,6 +205,7 @@ export function ControlledDropdown<T extends FieldValues, V = unknown>({
       render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
         <DropdownSelect
           label={label}
+          labelWeight={labelWeight}
           value={value as V | undefined}
           options={options}
           onChange={onChange}

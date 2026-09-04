@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.lg,
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: colors.border.light,
+    borderColor: colors.primary.main,
     backgroundColor: colors.background.primary,
   },
   cardTextContainer: {
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: colors.border.main,
+    borderColor: colors.primary.main,
     backgroundColor: colors.background.primary,
     justifyContent: 'center',
     alignItems: 'center',

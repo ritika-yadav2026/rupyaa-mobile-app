@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   grid: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   card: {
     alignItems: 'center',

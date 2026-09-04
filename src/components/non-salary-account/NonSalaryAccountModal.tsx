@@ -128,7 +128,7 @@ export function NonSalaryAccountModal({
         >
           <AppText
             variant="h4"
-            weight="bold"
+            weight="semiBold"
             color="textprimary"
             align="center"
             style={styles.title}
@@ -183,11 +183,13 @@ export function NonSalaryAccountModal({
               title={MANUAL_REVIEW_CALLOUT_TITLE}
               descriptionAlign="title"
               icon={
-                <Clock
-                  size={CALLOUT_ICON_SIZE}
-                  color={colors.text.primary}
-                  strokeWidth={1.8}
-                />
+                <View style={styles.manualReviewIconWrap}>
+                  <Clock
+                    size={CALLOUT_ICON_SIZE}
+                    color={colors.text.primary}
+                    strokeWidth={1.8}
+                  />
+                </View>
               }
             >
               {MANUAL_REVIEW_CALLOUT_BODY}
@@ -263,6 +265,8 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.lg,
   },
   title: {
+    fontSize: 20,
+    lineHeight: 36,
     marginBottom: spacing.base,
   },
   illustrationWrap: {
@@ -319,5 +323,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.primary.main,
+  },
+  manualReviewIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary.lightest,
   },
 });

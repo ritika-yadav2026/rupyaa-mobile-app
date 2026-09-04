@@ -6,7 +6,8 @@ import {
   StyleSheet,
   TextInputProps,
 } from 'react-native';
-import { colors, spacing, typography, radius } from '@/src/theme';
+import { colors, spacing, typography, radius, getFieldTextStyle } from '@/src/theme';
+import { useLocaleStore } from '@/src/store/useLocaleStore';
 import { AppText } from './AppText';
 
 interface DateInputProps extends Omit<TextInputProps, 'value' | 'onChangeText'> {
@@ -40,6 +41,8 @@ export function DateInput({
   ...textInputProps
 }: DateInputProps) {
   const { t } = useTranslation();
+  const language = useLocaleStore((state) => state.language);
+  const fieldTextStyle = getFieldTextStyle(language);
   const handleChange = (text: string) => {
     const formatted = formatDateInput(text);
     if (formatted.length <= 10) {
@@ -57,7 +60,7 @@ export function DateInput({
       </View>
       <TextInput
         ref={inputRef}
-        style={[styles.input, error && styles.inputError]}
+        style={[styles.input, fieldTextStyle, error && styles.inputError]}
         value={value}
         onChangeText={handleChange}
         placeholder="dd/mm/yyyy"
@@ -92,9 +95,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary.lightest_3,
     borderRadius: radius.md,
     paddingHorizontal: spacing.base,
-    paddingVertical: spacing.md,
-    fontSize: typography.fontSize.base,
-    color: colors.text.primary,
+    paddingVertical: spacing.sm,
+    minHeight: 40,
     borderWidth: 1,
     borderColor: colors.primary.main,
   },

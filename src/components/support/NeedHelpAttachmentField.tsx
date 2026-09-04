@@ -56,7 +56,7 @@ export function NeedHelpAttachmentField({
 
   return (
     <View style={styles.container}>
-      <AppText style={styles.label}>ATTACHMENTS (OPTIONAL)</AppText>
+      <AppText style={styles.label}>Attachments (Optional)</AppText>
 
       <TouchableOpacity
         style={styles.uploadArea}

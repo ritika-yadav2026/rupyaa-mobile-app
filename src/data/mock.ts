@@ -11,18 +11,25 @@ import type {
 
 export const onboardingSlides: OnboardingSlide[] = [
   {
+    id: '1',
+    title: 'Apply in Just a\nFew Steps',
+    description:
+      'Complete your loan application online with minimal details and a simple digital process.',
+    image: 'ONBOARDING_APPLY_STEPS',
+  },
+  {
     id: '2',
-    title: 'Built on Trust.',
-    titleHighlight: 'Trust.',
-    subtitle: 'No surprises',
-    description: 'Clear terms. Bank-grade security.\nNo hidden charges.',
+    title: 'Discover Loan Offer\nMade for You',
+    description:
+      'Check your eligibility and view loan offers that match your profile and financial needs.',
+    image: 'ONBOARDING_LOAN_OFFER',
   },
   {
     id: '3',
-    title: 'Instant Cash, Instant Help',
-    titleHighlight: 'Instant Help',
-    subtitle: '',
-    description: 'Quick approvals. Same-day disbursal.\nZero hassle.',
+    title: 'From Approval\nto Your Bank',
+    description:
+      'Complete verification, track your application and receive funds securely in your account.',
+    image: 'ONBOARDING_APPROVAL_BANK',
   },
 ];
 

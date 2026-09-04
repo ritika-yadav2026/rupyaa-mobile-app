@@ -1,0 +1,30 @@
+{
+    "project_info": {
+      "project_number": "715352192304",
+      "project_id": "rupyaa-8ea97",
+      "storage_bucket": "rupyaa-8ea97.firebasestorage.app"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:715352192304:android:030a44444c3a111c0b44f5",
+          "android_client_info": {
+            "package_name": "com.rupyaa.loan"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyBptACsVAowMxLlurcwu-shMnEx8gXMuH4"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
+  

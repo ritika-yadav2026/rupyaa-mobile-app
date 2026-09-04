@@ -38,13 +38,14 @@ const styles = StyleSheet.create({
     height: CIRCLE_SIZE,
     borderRadius: CIRCLE_SIZE / 2,
     borderWidth: 2,
-    borderColor: colors.border.main,
+    borderColor: colors.primary.main,
     backgroundColor: colors.background.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   circleActive: {
     borderColor: colors.primary.main,
+    borderWidth: 2.5,
   },
   circleCompleted: {
     backgroundColor: colors.primary.main,

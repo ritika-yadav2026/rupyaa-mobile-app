@@ -1,12 +1,14 @@
 import React, { type ReactNode, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, TextInput, StyleSheet, TextInputProps } from 'react-native';
-import { colors, spacing, typography, radius } from '@/src/theme';
+import { colors, spacing, typography, radius, getFieldTextStyle } from '@/src/theme';
 import { removeEmojis } from '@/src/utils/textInput/removeEmojis';
+import { useLocaleStore } from '@/src/store/useLocaleStore';
 import { AppText } from './AppText';
 
 interface FormInputProps extends TextInputProps {
   label: string;
+  labelWeight?: 'regular' | 'medium' | 'semiBold' | 'bold';
   labelAccessory?: ReactNode;
   /** Rendered inside the input box on the left (e.g. "+91" prefix). */
   leftAccessory?: ReactNode;
@@ -22,6 +24,7 @@ interface FormInputProps extends TextInputProps {
 
 export function FormInput({
   label,
+  labelWeight = 'medium',
   labelAccessory,
   leftAccessory,
   rightAccessory,
@@ -36,6 +39,8 @@ export function FormInput({
   ...textInputProps
 }: FormInputProps) {
   const { t } = useTranslation();
+  const language = useLocaleStore((state) => state.language);
+  const fieldTextStyle = getFieldTextStyle(language);
   const hasAccessories = Boolean(leftAccessory || rightAccessory);
   const handleChangeText = (text: string) => {
     onChangeText(removeEmojis(text));
@@ -44,7 +49,7 @@ export function FormInput({
   return (
     <View style={styles.container}>
       <View style={styles.labelRow}>
-        <AppText style={styles.label}>
+        <AppText style={styles.label} weight={labelWeight}>
           {t(label)}
           {required && <AppText style={styles.required}> *</AppText>}
         </AppText>
@@ -68,6 +73,7 @@ export function FormInput({
           ref={inputRef}
           style={[
             styles.input,
+            fieldTextStyle,
             multiline && styles.inputMultiline,
             hasAccessories && styles.inputWithAccessories,
             inputStyle,
@@ -106,7 +112,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: typography.fontSize.sm,
-    fontFamily: typography.fontFamily.medium,
     color: colors.text.primary,
     flex: 1,
   },
@@ -124,7 +129,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.primary.main,
-    minHeight: 48,
+    minHeight: 40,
   },
   /** Multiline: top-align text; `alignItems: 'center'` causes flicker while typing. */
   inputWrapperMultiline: {
@@ -144,9 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: radius.md,
     paddingHorizontal: spacing.base,
-    paddingVertical: spacing.md,
-    fontSize: typography.fontSize.base,
-    color: colors.text.primary,
+    paddingVertical: spacing.sm,
     borderWidth: 0,
   },
   inputWithAccessories: {
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
   accessoryDivider: {
     width: 1,
     alignSelf: 'stretch',
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.primary.main,
     marginLeft: spacing.sm,
     marginRight: spacing.xs,
   },

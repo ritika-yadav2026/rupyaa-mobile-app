@@ -28,12 +28,12 @@ export function StepLabel({ label, highlighted }: StepLabelProps) {
 const styles = StyleSheet.create({
   label: {
     marginTop: spacing.xs,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     textAlign: 'center',
     fontSize: typography.fontSize.xs,
     paddingHorizontal: 2,
   },
   labelHighlighted: {
-    color: colors.text.primary,
+    color: colors.text.black,
   },
 });

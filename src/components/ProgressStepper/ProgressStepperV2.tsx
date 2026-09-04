@@ -39,7 +39,7 @@ export interface ProgressStepperV2Props {
   accentColor?: string;
 }
 
-const STEP_SIZE = 20;
+const STEP_SIZE = 22;
 
 // ============================================================================
 // Custom styles to match theme (V1 look)
@@ -51,12 +51,12 @@ function buildCustomStyles(stepSize: number, accentColor: string) {
     currentStepIndicatorSize: stepSize,
     separatorStrokeWidth: 2,
     stepStrokeWidth: 2,
-    currentStepStrokeWidth: 2,
+    currentStepStrokeWidth: 2.5,
     stepStrokeCurrentColor: accentColor,
     stepStrokeFinishedColor: accentColor,
-    stepStrokeUnFinishedColor: colors.primary.lightest,
+    stepStrokeUnFinishedColor: accentColor,
     separatorFinishedColor: accentColor,
-    separatorUnFinishedColor: colors.primary.lightest,
+    separatorUnFinishedColor: accentColor,
     stepIndicatorFinishedColor: accentColor,
     stepIndicatorUnFinishedColor: colors.background.primary,
     stepIndicatorCurrentColor: colors.background.primary,
@@ -64,9 +64,9 @@ function buildCustomStyles(stepSize: number, accentColor: string) {
     currentStepIndicatorLabelFontSize: 0,
     stepIndicatorLabelCurrentColor: colors.primary.contrast,
     stepIndicatorLabelFinishedColor: colors.primary.contrast,
-    stepIndicatorLabelUnFinishedColor: colors.text.secondary,
-    labelColor: colors.text.secondary,
-    currentStepLabelColor: colors.text.primary,
+    stepIndicatorLabelUnFinishedColor: colors.text.primary,
+    labelColor: colors.text.primary,
+    currentStepLabelColor: colors.text.black,
     labelSize: typography.fontSize.xs,
     labelAlign: 'center' as const,
   };
@@ -156,7 +156,6 @@ export function ProgressStepperV2({
 
 const styles = StyleSheet.create({
   container: {
-    // paddingHorizontal: spacing.base,
     paddingVertical: spacing.base,
   },
   checkWrap: {
@@ -170,12 +169,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   labelText: {
-    fontSize: typography.fontSize.xxs,
-    color: colors.text.secondary,
+    fontSize: typography.fontSize.xs,
+    color: colors.text.primary,
     textAlign: 'center',
+    fontWeight: '500',
   },
   labelTextActive: {
-    color: colors.text.primary,
-    fontWeight: '600',
+    color: colors.text.black,
+    fontWeight: '700',
   },
 });

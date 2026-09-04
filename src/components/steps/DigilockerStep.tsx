@@ -329,8 +329,9 @@ export function DigilockerStep({ onNext, onPrev }: StepProps) {
       <FullScreenModal
         visible={isWebViewOpen}
         onClose={handleCloseWebView}
-        title="DigiLocker"
+        title="Digi Locker"
         subtitle="Complete your Aadhaar verification"
+        showTopGradient
       >
         <View style={styles.webViewContainer}>
           <Digilocker

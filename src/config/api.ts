@@ -60,7 +60,7 @@ export const API_ENDPOINTS = {
     emailCheckOtp: '/external/email/otp-verify',
     externalAppConfig: '/external/config',
     encryptionStatus: '/external/encryption',
-    gromoEquifaxPull: '/external/gromo-equifax-pull',
+    gromoEquifaxPull: '/gromo/equifax-pull',
   },
   user: {
 

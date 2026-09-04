@@ -53,14 +53,16 @@ export default function DocumentsTab() {
     return (
       <Screen scroll={false} edges={[]}>
         <View style={commonStyles.fullCenter}>
-          <Image
-            source={IMAGES.NO_LOAN}
-            resizeMode="contain"
-            style={styles.emptyImage}
-            accessibilityLabel="No documents"
-          />
-          <AppText variant="caption" color="tertiary" style={styles.subtitle}>
-            No pending documents. We'll notify you if anything is required.
+          <View style={styles.emptyImageContainer}>
+            <Image
+              source={IMAGES.NO_PENDING_DOCUMENTS}
+              resizeMode="contain"
+              style={styles.emptyImage}
+              accessibilityLabel="No pending documents"
+            />
+          </View>
+          <AppText variant="caption" color="black" style={styles.subtitle}>
+            No pending documents. we’ll notify you if anything is required
           </AppText>
           <Button
             title="Refresh"
@@ -101,10 +103,15 @@ export default function DocumentsTab() {
 }
 
 const styles = StyleSheet.create({
+  emptyImageContainer: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: spacing.lg,
+  },
   emptyImage: {
     width: 200,
     height: 200,
-    marginBottom: spacing.lg,
   },
   subtitle: {
     textAlign: "center",

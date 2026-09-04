@@ -48,8 +48,43 @@ export const employmentDetailsFormSchema = z.object({
   declaredSalaryDay: z.number().min(1, 'Select a valid day').max(31, 'Select a valid day'),
 });
 
+/**
+ * [single-screen-merge] Personal details + employment type + salaried work fields
+ * in one schema for the merged PersonalDetailsStep. The salaried fields
+ * (primaryField/declaredSalaryDay) are required only when employmentMode is
+ * 'salaried' (mirrors employmentDetailsFormSchema).
+ */
+export const personalWithEmploymentSchema = personalDetailsSchema
+  .extend({
+    employmentMode: z.enum(['salaried', 'self_employed', 'unemployed'], {
+      message: 'Select your employment type',
+    }),
+    primaryField: z.string().optional(),
+    declaredSalaryDay: z.number().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.employmentMode !== 'salaried') return;
+    if (!data.primaryField || data.primaryField.trim().length < 2) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['primaryField'],
+        message: 'Organization name is required',
+      });
+    }
+    const day = data.declaredSalaryDay;
+    if (day == null || day < 1 || day > 31) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['declaredSalaryDay'],
+        message: 'Select a valid day',
+      });
+    }
+  });
+
+
 export type PersonalDetailsSchema = z.infer<typeof personalDetailsSchema>;
 export type SalariedSchema = z.infer<typeof salariedSchema>;
 export type SelfEmployedSchema = z.infer<typeof selfEmployedSchema>;
 export type UnemployedSchema = z.infer<typeof unemployedSchema>;
 export type EmploymentDetailsFormSchema = z.infer<typeof employmentDetailsFormSchema>;
+export type PersonalWithEmploymentSchema = z.infer<typeof personalWithEmploymentSchema>;

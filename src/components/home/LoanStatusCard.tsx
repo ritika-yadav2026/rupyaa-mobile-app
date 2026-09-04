@@ -6,7 +6,7 @@ import { AppText } from '../AppText';
 import { formatCurrency } from '@/src/utils/common-helper';
 import { ProgressStepperV2 } from '../ProgressStepper';
 import type { FlowJourneySummary } from '@/src/utils/flowProgress';
-import type { FlowPhase } from '@/src/config/flowSteps';
+import { getMainStepLabels, type FlowPhase } from '@/src/config/flowSteps';
 import { SoftImageAura } from './SoftImageAura';
 
 type LoanJourneyStatus = 'in_progress' | 'completed';
@@ -70,13 +70,6 @@ interface LoanStatusCardProps {
    */
   amount?: number;
 }
-
-const JOURNEY_STEPS = [
-  { id: 'register', label: 'Details' },
-  { id: 'offer', label: 'Offer' },
-  { id: 'kyc', label: 'Verify' },
-  { id: 'disbursal', label: 'Get Funds' },
-] as const;
 
 export function LoanStatusCard({
   status,
@@ -162,7 +155,7 @@ export function LoanStatusCard({
         </View>
 
         {heading && <AppText variant="h3" weight="semiBold" style={styles.heading}>
-          {heading}
+          {heading}jdkjheygy
         </AppText>}
         {amount != null && typeof amount === 'number' && (
           <AppText variant="body" weight="semiBold" style={styles.amountText}>
@@ -183,7 +176,7 @@ export function LoanStatusCard({
         {showProgressStepper && (
           <View style={styles.stepperWrap}>
             <ProgressStepperV2
-              steps={JOURNEY_STEPS}
+              steps={getMainStepLabels()}
               currentStep={currentStep}
               progress={progressInStep}
               passedPhases={passedPhases}

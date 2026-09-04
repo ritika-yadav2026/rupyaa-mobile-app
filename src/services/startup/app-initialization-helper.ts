@@ -76,9 +76,13 @@ export async function checkAndPromptForMinMajorVersion(): Promise<void> {
 	const updateInfo: IAppUpdateCheckResponse | null = await checkAppUpdate();
 	if (!updateInfo || !updateInfo.updateRequired) return;
 
-	const { forceUpdate, currentProductionVersion, releaseNotes } = updateInfo;
-  const enableForceUpdate = forceUpdate && !__DEV__;
-	const storeUrl: string = Platform.OS === 'ios' ? appConfig.appStoreUrl : appConfig.playStoreUrl;
+	const { currentProductionVersion, releaseNotes } = updateInfo;
+
+  // TODO: Restore `forceUpdate && !__DEV__` when forced updates are enabled again.
+  const enableForceUpdate = false;
+	
+  
+  const storeUrl: string = Platform.OS === 'ios' ? appConfig.appStoreUrl : appConfig.playStoreUrl;
 	const params = {
 		releaseNotes: String(releaseNotes ?? ''),
 		storeUrl,

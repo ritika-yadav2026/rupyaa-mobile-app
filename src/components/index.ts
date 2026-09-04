@@ -82,7 +82,6 @@ export {
 } from './IneligibilityModal';
 export {
   UnderReviewModal,
-  type UnderReviewModalProps,
 } from './UnderReviewModal';
 export {
   OfferStatusModal,
@@ -92,6 +91,7 @@ export {
   ZapcashLoading,
   type ZapcashLoadingProps,
 } from './ZapcashLoading';
+export { AnimatedLoader, type AnimatedLoaderProps } from './AnimatedLoader';
 export {
   OfferResultModal,
   type OfferResultModalProps,

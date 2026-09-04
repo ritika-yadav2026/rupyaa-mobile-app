@@ -475,7 +475,7 @@ export default function PermissionsScreen() {
               checked={hasAcceptedPrivacy}
               onChange={setHasAcceptedPrivacy}
               fillLabel
-              size={14}
+              size={18}
             >
               <AppText
                 style={styles.privacyText}
@@ -491,7 +491,7 @@ export default function PermissionsScreen() {
                 >
                   Privacy Policy
                 </AppText>{' '}
-                {t('of Zapcash.')}
+                {t('of Rupyaa.')}
               </AppText>
             </Checkbox>
           </View>
@@ -598,7 +598,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   privacyText: {
-    fontSize: typography.fontSize.xxs,
+    fontSize: typography.fontSize.xs,
     lineHeight: typography.fontSize.xxs * typography.lineHeight.normal,
   },
   privacyLink: {

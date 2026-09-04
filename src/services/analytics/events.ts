@@ -11,6 +11,8 @@ export const ANALYTICS_EVENT = {
   OTP_SUCCESS_SCREEN: 'otp_success_screen',
 
   // Register (loan wizard)
+  PERSONAL_EMPLOYMENT_DETAIL_PAGE_LAND: 'personal_employment_detail_page_land',
+  PERSONAL_EMPLOYMENT_DETAIL_PAGE_SUBMIT: 'personal_employment_detail_page_submit',
   PERSONAL_DETAIL_PAGE_LAND: 'personal_detail_page_land',
   PERSONAL_DETAIL_PAGE_SUBMIT: 'personal_detail_page_submit',
   EMPLOYMENT_DETAIL_PAGE_LAND: 'employment_detail_page_land',

@@ -93,7 +93,7 @@ export default function TabLayout() {
               height: TAB_BAR_HEIGHT,
               borderRadius: 30,
               marginHorizontal: spacing.md,
-              marginBottom: Math.max(insets.bottom, spacing.sm),
+              marginBottom: Math.max(insets.bottom, spacing.xs),
               paddingHorizontal: spacing.xs,
               paddingVertical: 0,
             },
@@ -111,7 +111,8 @@ export default function TabLayout() {
               lineHeight: 12,
               fontWeight: '500',
               fontFamily: typography.fontFamily.medium,
-              margin: 0,
+              marginTop: 2,
+              marginBottom: -2,
               padding: 0,
             },
             tabBarIconStyle: {
