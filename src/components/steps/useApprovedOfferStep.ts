@@ -4,8 +4,8 @@ import { useCurrentOfferStore } from '@/src/store/useCurrentOfferStore';
 import { fetchCurrentOfferForBankStatement } from '@/src/services/user/useUserStage';
 import { offerService } from '@/src/services/offer';
 import { useFlowStore } from '@/src/store/useFlowStore';
-import type { CurrentOfferOffer, CurrentOfferSuccessResponse } from '@/src/types/offer';
-import { isCurrentOfferSuccess, isOfferAcceptable } from '@/src/types/offer';
+import type { CurrentOfferOffer, CurrentOfferSuccessResponse, CurrentEmiOffer } from '@/src/types/offer';
+import { getCurrentEmiOffer, isCurrentOfferSuccess, isOfferAcceptable } from '@/src/types/offer';
 import type { LoanType } from '@/src/types/loans';
 import type { ApiResponse } from '@/src/types/api';
 import { navigateToPhaseSubstep } from '@/src/services/navigation/stepNavigation';
@@ -43,6 +43,7 @@ export interface UseApprovedOfferStepParams {
 
 export interface UseApprovedOfferStepResult {
   offer: CurrentOfferOffer | null;
+  emiOffer: CurrentEmiOffer | undefined;
   loanType: LoanType | undefined;
   hasOffer: boolean;
   /** True once we have received an offer response (offer or no-offer); use to hide ZapcashLoading. */
@@ -79,6 +80,10 @@ export function useApprovedOfferStep({
   const hasTriggeredInitialOfferFetchRef = useRef(false);
 
   const offer = getOfferFromStore(lastResponse);
+  const emiOffer =
+    lastResponse?.success && lastResponse.data != null
+      ? getCurrentEmiOffer(lastResponse.data)
+      : undefined;
   const loanType = getLoanTypeFromStore(lastResponse);
   const hasOffer = offer != null && isOfferAcceptable(offer);
   const isOfferResolved = lastResponse != null && !isHydratingLatestOffer;
@@ -158,6 +163,7 @@ export function useApprovedOfferStep({
 
   return {
     offer,
+    emiOffer,
     loanType,
     hasOffer,
     isOfferResolved,

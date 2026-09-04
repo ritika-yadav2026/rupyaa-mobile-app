@@ -15,6 +15,10 @@ export interface CurrentOfferLoanId {
   status?: string;
   totalPayable?: number;
   interestRate?: number;
+  emiAmount?: number;
+  fee?: number;
+  type?: LoanType;
+  emiOffer?: CurrentEmiOffer;
   [key: string]: unknown;
 }
 
@@ -27,6 +31,12 @@ export interface CurrentOfferOffer {
   loanTenure: number;
   interestRate: number;
   payableAmount: number;
+  /** EMI offer: monthly installment amount from API. */
+  emiAmount?: number;
+  /** EMI offer: one-time processing fee from API. */
+  processingFee?: number;
+  /** EMI offer: day of month for EMI auto-debit (1–31). */
+  emiDeductionDay?: number;
   status: string;
   isActive?: boolean;
   rawOffer?: number;
@@ -38,10 +48,85 @@ export interface CurrentOfferOffer {
   [key: string]: unknown;
 }
 
+export interface EmiRepaymentItem {
+  id: string;
+  emiNumber: number;
+  dueDate: string;
+  amount: string;
+  principal: string;
+  interest: string;
+}
+
+export interface EmiApprovedOfferContentProps {
+  offer: CurrentOfferOffer;
+  emiOffer?: CurrentEmiOffer;
+}
+
+export interface EmiSummaryCardProps {
+  loanAmount: string;
+  tenure: string;
+}
+
+export interface EmiRepaymentCardProps {
+  item: EmiRepaymentItem;
+  isExpanded: boolean;
+  onToggle: () => void;
+}
+
+export interface OfferTypeContentProps {
+  offer: CurrentOfferOffer;
+  loanType?: LoanType;
+  emiOffer?: CurrentEmiOffer;
+}
+
+export interface ApprovedOfferBodyProps {
+  offer: CurrentOfferOffer;
+  loanType?: LoanType;
+  emiOffer?: CurrentEmiOffer;
+  showImproveOfferAction: boolean;
+  improveOfferByUsingBsa: () => void;
+  acceptError: string | null;
+}
+
+export interface PayDayApprovedOfferContentProps {
+  offer: CurrentOfferOffer;
+  loanType?: LoanType;
+}
+
+export interface OfferDetailRowProps {
+  label: string;
+  value: string;
+  isLast?: boolean;
+}
+
+export interface OfferAmountHeaderProps {
+  amount: number;
+}
+
+export interface CurrentEmiOfferRepaymentPlanItem {
+  index: number;
+  dueDate: string;
+  emiAmount: number;
+  principal: number;
+  interest: number;
+}
+
+export interface CurrentEmiOffer {
+  loanAmount: number;
+  totalPayable: number;
+  monthlyEmi: number;
+  tenureMonths: number;
+  interestRatePerAnnum: number;
+  processingFee: number;
+  emiDeductionDay: number;
+  repaymentPlan: CurrentEmiOfferRepaymentPlanItem[];
+}
+
 /** Success response when an offer exists */
 export interface CurrentOfferSuccessResponse {
   message: string;
   offer: CurrentOfferOffer;
+  emiOffer?: CurrentEmiOffer;
   loanType?: LoanType;
   isRiskyCustomer?: boolean;
   riskyReloanCount?: number;
@@ -60,6 +145,21 @@ export function isCurrentOfferSuccess(
   data: CurrentOfferResponse
 ): data is CurrentOfferSuccessResponse {
   return 'offer' in data && data.offer != null;
+}
+
+/**
+ * Returns EMI offer details from the current API shape.
+ * Root-level emiOffer remains supported while older app versions are phased out.
+ */
+export function getCurrentEmiOffer(
+  data: CurrentOfferResponse | null | undefined
+): CurrentEmiOffer | undefined {
+  if (!data || !isCurrentOfferSuccess(data)) return undefined;
+  if (data.emiOffer != null) return data.emiOffer;
+
+  const loanId = data.offer.loanId;
+  if (loanId == null || typeof loanId === 'string') return undefined;
+  return loanId.emiOffer;
 }
 
 /** Extracts offer amount from current-offer response. Returns undefined if no valid offer. */

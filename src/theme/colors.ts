@@ -21,6 +21,8 @@ export const colors = {
     light: '#33DDAF',
     dark: '#00A77D',
     contrast: '#FFFFFF',
+    bg: '#E6FAF5',
+    'bg-2': '#F0FDF9',
   },
   whatsapp: {
     lighter: '#34C7593D',
@@ -69,8 +71,9 @@ export const colors = {
   error: {
     main: '#EF4444',
     light: '#F87171',
-  danger: '#991B1B',
+    danger: '#991B1B',
     dark: '#DC2626',
+    overdue: '#d65d2c',
     bg: '#FEE2E2',
   },
   info: {
