@@ -66,6 +66,7 @@ import faceKycIntro from '@/assets/images/face-kyc-intro.svg';
 import homeCreditScore from '@/assets/images/home-credit-score.svg';
 import finalDisbursementReview from '@/assets/images/final-disbursement-review.svg';
 import supportAgent from '@/assets/images/support-agent.png';
+import assuranceCheckbox from '@/assets/images/assurance-checkbox.svg';
 import noPendingDocuments from '@/assets/images/no-pending-documents.png';
 
 // const BUCKET_IMAGE_URL = 'https://wecredit-main-website-assets.s3.ap-south-1.amazonaws.com';
@@ -136,6 +137,7 @@ export const IMAGES = {
   HOME_CREDIT_SCORE: homeCreditScore,
   FINAL_DISBURSEMENT_REVIEW: finalDisbursementReview,
   SUPPORT_AGENT: supportAgent,
+  ASSURANCE_CHECKBOX: assuranceCheckbox,
   NO_PENDING_DOCUMENTS: noPendingDocuments,
 } as const;
 
