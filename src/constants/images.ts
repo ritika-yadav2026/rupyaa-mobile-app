@@ -38,7 +38,6 @@ import applicationRejected from '@/assets/images/application-rejected.png';
 import zapcashLoading from '@/assets/videos/zapcash-loading.gif';
 import icon from '@/assets/images/icon.png';
 import enachSuccess from '@/assets/images/enach-success.png'; 
-import enachShield from '@/assets/images/enach-shield.svg';
 import esignSuccess from '@/assets/images/esign-success.png';
 import activeLoan from '@/assets/images/active-loan.png';
 import faceKycSuccess from '@/assets/images/face-kyc-success.png';
@@ -101,7 +100,6 @@ export const IMAGES = {
   WHATSAPP_ICON: whatsappIcon,
   LOCK: lock,
   ENACH_SUCCESS: enachSuccess,
-  ENACH_SHIELD: enachShield,
   ESIGN_SUCCESS: esignSuccess,
   Z_ICON: zIcon,
   /** Offer status step illustrations (placeholders; swap assets when ready). */
@@ -123,7 +121,6 @@ export const IMAGES = {
   NO_DOCUMENT: noDocuments,
   PAYMENT_SUCCESS: paymentSuccess,
   NO_LOAN: noLoan,
-  NO_PENDING_DOCUMENTS: noPendingDocuments,
   GRID_IMAGE: gridImage,
   TIGER: tiger,
   LETSTALK: letstalk,
